@@ -4,9 +4,12 @@ var server = require('http').Server(app);
 var io = require('socket.io')(server);
 var codeList = []; // for storing code submissions
 
-const database = require('./db');
-var db = new database();
-db.addUser("4");
+const database = require('./database/db');
+var users = database.users;
+var posts = database.posts;
+var userID = '5';
+users.addUser(userID);
+posts.addPost(userID, 'code');
 
 // send files in Public folder
 app.use(express.static("Public"));
@@ -45,4 +48,4 @@ io.on('connection',function(socket){
 
 });
 
-server.listen(8080);
+server.listen(8080 || process.env.PORT);
