@@ -2,7 +2,19 @@ var express = require('express');
 var app = express();
 var server = require('http').Server(app);
 var io = require('socket.io')(server);
+
 var codeList = []; // for storing code submissions
+
+const pg = require('pg');
+const conString = 'postgres://testEditor:ezpass3@localhost:5432/test';
+const client = new pg.Client(conString);
+client.connect();
+var users = [2,4,6];
+const query = client.query(
+  'INSERT INTO users (studentID) VALUES ($1);',
+  ["2"]
+);
+
 // send files in Public folder
 app.use(express.static("Public"));
 /*
