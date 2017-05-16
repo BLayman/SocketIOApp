@@ -2,14 +2,9 @@ var express = require('express');
 var app = express();
 var server = require('http').Server(app);
 var io = require('socket.io')(server);
-var codeList = []; // for storing code submissions
-
-const database = require('./database/db');
-var users = database.users;
-var posts = database.posts;
-var userID = '5';
-users.addUser(userID);
-posts.addPost(userID, 'code');
+var database = require('./database/db'); // establish database connection
+var users = database.users; // users table API
+var posts = database.posts; // posts table API
 
 // send files in Public folder
 app.use(express.static("Public"));
@@ -23,24 +18,42 @@ app.get('/posts',function (req,res) {
 
 // io connection
 io.on('connection',function(socket){
+  console.log("io connected");
+  // retrieve list of posts from database
+  var codeList = [];
+  posts.retrieve(function (array){
+    codeList = array;
+    console.log(codeList);
+    // emit join event
+    socket.emit('join', codeList);
+  }); // for storing code submissions
 
-  console.log("connected");
-  // emit join event
-  socket.emit('join', codeList);
+  // listen for addition of new user
+  socket.on('addUser', function (userID){
+    console.log(userID);
+    // set currentUser to whatever ID was given by the client
+    socket.currentUserID = userID;
+    // add user ID to users table in database
+    users.addUser(userID);
+  });
 
   // listen for code sent from user
   socket.on('sendCode', function (code) {
     console.log(code);
-    // add to codeList array
-    codeList.push(code);
+    // add code to posts table in database
+    posts.addPost(socket.currentUserID,code);
+    /* add to codeList array
+    codeList.push(code);*/
     // broadcast code to all users
     socket.emit('sendBack', code);
     socket.broadcast.emit('sendBack', code);
   });
   // listen for event to clear code submissions
   socket.on('clear',function () {
-    // empty codeList array
-    codeList = [];
+    /* empty codeList array
+    codeList = []; */
+    // clear table in database
+    posts.deletePosts();
     // tell browsers to clear content
     socket.emit('cleared');
     socket.broadcast.emit('cleared');
@@ -48,4 +61,6 @@ io.on('connection',function(socket){
 
 });
 
-server.listen(8080 || process.env.PORT);
+server.listen(8080 || process.env.PORT,function () {
+  console.log('listening on 8080');
+});

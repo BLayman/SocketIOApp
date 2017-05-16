@@ -15,6 +15,7 @@ $(document).ready(function() {
     codeList.forEach(function (block) {
       $("#posts").append("<pre class = \"post\">"+ block +"</pre>");
     });
+    socket.emit('addUser', prompt("Enter your student ID"));
   });
 
   // when posts are to be cleared
