@@ -1,5 +1,5 @@
 {
-  "name": "Code Share",
+  "name": "Code_Share",
   "version": "1.0.0",
   "description": "Web app for sharing code",
   "main": "server.js",
@@ -14,5 +14,9 @@
     "http": "0.0.0",
     "pg": "^6.2.2",
     "socket.io": "^2.0.1"
+  },
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "mocha": "^3.4.1"
   }
 }

@@ -3,7 +3,11 @@
 
 module.exports = function (client) {
   // add new user
-  this.addUser = function (userID){
-    client.query('INSERT INTO users (studentID) VALUES ($1);',[userID]);
+  this.addUser = function (userID,callback){
+    client.query('INSERT INTO users (studentID) VALUES ($1);',[userID],function () {
+      if(typeof callback === 'function'){
+        callback();
+      }
+    });
   }
 };

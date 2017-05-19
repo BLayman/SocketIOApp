@@ -12,3 +12,4 @@ const posts = require('./posts');
 // export constructors for modules, passing in client connection
 exports.users = new users(client);
 exports.posts = new posts(client);
+exports.client = client;

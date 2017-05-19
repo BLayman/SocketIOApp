@@ -9,15 +9,14 @@ module.exports = function (client) {
   },
   // retrieve list of posts
   this.retrieve = function (callback) {
-    var results = [];
+    var results = []; // array of posts to be send in callback
     const query = client.query('SELECT body FROM posts');
     query.on('row',function (row) {
       results.push(row.body);
     });
     query.on('end', function () {
       callback(results);
-      console.log(results);
-    })
+    });
   }
 };
 
