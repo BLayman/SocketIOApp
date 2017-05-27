@@ -2,9 +2,11 @@ var express = require('express');
 var app = express();
 var server = require('http').Server(app);
 var io = require('socket.io')(server);
-var database = require('./database/db'); // establish database connection
-var users = database.users; // users table API
-var posts = database.posts; // posts table API
+
+var usersCon = require('./database/users');
+var users = new usersCon(); // users table API
+var postsCon = require('./database/posts')
+var posts = new postsCon; // posts table API
 
 // send files in Public folder
 app.use(express.static("Public"));
@@ -35,6 +37,7 @@ io.on('connection',function(socket){
     socket.currentUserID = userID;
     // add user ID to users table in database
     users.addUser(userID);
+    //database.insert('users','studentid',userID);
   });
 
   // listen for code sent from user
