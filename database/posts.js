@@ -28,7 +28,7 @@ module.exports = function () {
   },
 
   // method fo retrieving array of posts
-  this.retrieve = function (callback) {
+  this.retrieve = function (callback = () => {}) {
     Posts.findAll({
       attributes: ['postBody']
     })
@@ -46,8 +46,9 @@ module.exports = function () {
   },
 
   // for deleting all posts
-  this.deletePosts = function () {
+  this.deletePosts = function (callback = () => {}) {
     Posts.destroy({truncate: true});
+    callback();
   }
 
 }

@@ -1,6 +1,6 @@
 // establish database connection
 const Sequelize = require('sequelize');
-var connection = new Sequelize('postgres://testEditor:ezpass3@localhost:5432/test');
+const connection = new Sequelize('postgres://testEditor:ezpass3@localhost:5432/test');
 console.log("connected to database");
 
 // access to sequelize connection and models

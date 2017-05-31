@@ -5,12 +5,15 @@ var expect = chai.expect;
 // database connection
 const Sequelize = require('sequelize');
 const db = require('../database/db2');
+// get database connection
 var connection = db.sequelize;
+// users table model
+var Users = db.users;
+
 // users table API
 var usersCon = require('../database/users');
 var users = new usersCon();
-// Users table model
-var Users = db.users;
+
 
 /* Tests */
 // test users.addUser function
@@ -23,20 +26,19 @@ describe('addUser', function(){
     // add input user
     users.addUser(inputUser, function () {
       // seach users for students with a student id that matches inputUser
+      var found = false;
       Users.findOne({
         where: {
           studentID: inputUser
         }
       })
       .then(function (result) {
-        if (result != null){
-          // change tableUser to match result of search
-          tableUser = result.dataValues.studentID;
-        }
-        // if user found in table matches input user, pass test
-        expect(tableUser).to.equal(inputUser);
+        expect(result).to.not.be.null;
         done();
-      });
+      })
+      /*.catch(function (err) {
+        throw new Error('error');
+      })*/
     });
   });
 });

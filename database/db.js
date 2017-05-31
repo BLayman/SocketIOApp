@@ -1,4 +1,4 @@
-/* not in use anymore
+/* old pg package database connection, not in use anymore
 
 const conString = 'postgres://testEditor:ezpass3@localhost:5432/test';
 // postgre-promise
