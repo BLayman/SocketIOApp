@@ -4,18 +4,20 @@ const chai = require('chai');
 var expect = chai.expect;
 // database connection
 const Sequelize = require('sequelize');
-const db = require('../database/db2');
+const db = require('../../database/db2');
 // get database connection
 var connection = db.sequelize;
 // users table model
 var Users = db.users;
 
 // users table API
-var usersCon = require('../database/users');
+var usersCon = require('../../database/users');
 var users = new usersCon();
 
 
 /* Tests */
+describe('users', function(){
+
 // test users.addUser function
 describe('addUser', function(){
   var inputUser = 0; // user passed into addUser
@@ -41,4 +43,5 @@ describe('addUser', function(){
       })*/
     });
   });
+});
 });

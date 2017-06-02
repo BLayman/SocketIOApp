@@ -33,7 +33,10 @@ module.exports = function () {
       var p1 = Posts.create({
         studentID : 1,
         postBody: 'post 1'
-      });
+      })
+      .then(function (result) {
+        console.log(result.dataValues);
+      })
       var p2 = Posts.create({
         studentID : 2,
         postBody: 'post 2'

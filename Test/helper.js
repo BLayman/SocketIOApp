@@ -3,6 +3,7 @@ var connection = db.sequelize;
 
 
 // Global before each wipes database clean before starting test
+
 beforeEach(function (done) {
   connection.sync({force:true})
   .then(function () {

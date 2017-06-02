@@ -28,7 +28,7 @@ module.exports = function () {
   },
 
   // method fo retrieving array of posts
-  this.retrieve = function (callback = () => {}) {
+  this.retrieve = function (success = () => {}, failure = () => {}) {
     Posts.findAll({
       attributes: ['postBody']
     })
@@ -37,11 +37,12 @@ module.exports = function () {
       records.forEach(function (record){
         results.push(record.dataValues.postBody);
       });
-      console.log(results);
-      callback(results);
+      //console.log(results);
+      success(results);
     })
     .catch(function (err) {
       console.log(err);
+      failure(err);
     });
   },
 
@@ -57,28 +58,4 @@ module.exports = function () {
 modExp = new module.exports();
 modExp.addPost(222, "new post");
 modExp.retrieve();
-*/
-
-/* old code
-module.exports = function (client) {
-  // add new post
-  this.addPost = function (stuID, post) {
-    client.query('INSERT INTO posts (studentID, body) VALUES ($1,$2)', [stuID, post]);
-  },
-  // delete all posts
-  this.deletePosts = function () {
-    client.query('DELETE FROM posts');
-  },
-  // retrieve list of posts
-  this.retrieve = function (callback) {
-    var results = []; // array of posts to be send in callback
-    const query = client.query('SELECT body FROM posts');
-    query.on('row',function (row) {
-      results.push(row .body);
-    });
-    query.on('end', function () {
-      callback(results);
-    });
-  }
-};
 */

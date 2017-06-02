@@ -3,19 +3,21 @@
 const chai = require('chai');
 var expect = chai.expect;
 // seed helper module
-const seedCon = require('../Dev/seed');
+const seedCon = require('../../Dev/seed');
 var seed = new seedCon;
 // database connection
 const Sequelize = require('sequelize');
-const db = require('../database/db2');
+const db = require('../../database/db2');
 const connection = db.sequelize;
 // posts table API
-const postsCon = require('../database/posts')
+const postsCon = require('../../database/posts')
 var posts = new postsCon;
 // posts table model
 var Posts = db.posts;
 
 /* tests */
+describe('posts', function(){
+
 // test addPost method
 describe('addpost', function(){
   // input variables
@@ -42,10 +44,11 @@ describe('addpost', function(){
   });
 });
 
+
 // test for deletePosts method
 describe('deletePosts', function(){
   // add something to database before deleting everything
-  before(function (done) {
+  beforeEach(function (done) {
     seed.posts(function () {
       done();
     });
@@ -66,4 +69,24 @@ describe('deletePosts', function(){
       done();
     });
   });
+});
+
+describe('retrievePosts',function () {
+  // add something to database to be retrieved
+  beforeEach(function (done) {
+    seed.posts(function () {
+      done();
+    });
+  });
+
+  it('sends an array of results to the success callback', function (done) {
+    posts.retrieve(function (results) {
+      expect(results).to.include.members(['post 1','post 2']);
+      done();
+    },
+    function (err) {
+        throw new Error('retrieve failed');
+    })
+  })
+})
 });
