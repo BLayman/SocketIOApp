@@ -1,5 +1,5 @@
 const db = require('../database/db2');
-var connection = db.sequelize;
+const connection = db.sequelize;
 
 
 // Global before each wipes database clean before starting test

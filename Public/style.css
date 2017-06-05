@@ -1,6 +1,12 @@
 body{
   background-color: rgb(127, 179, 198);
 }
+button{
+  font-size: 1.2vw;
+}
+select{
+  font-size: 1.2vw;
+}
 .codeBox{
   background-color: black;
   color: white;
@@ -10,10 +16,6 @@ body{
   font-size: 1.4vw;
   padding: 1%;
   white-space: pre-wrap;
-}
-#posts{
-  width:25%;
-  float:left;
 }
 .post{
   background-color:rgb(50,50,50);
@@ -29,10 +31,20 @@ body{
   background-color:blue;
 }
 
-button{
-  font-size: 1.2vw;
-}
-#submitCode{
+#posts{
+  width:25%;
   float:left;
+}
+
+#selectProblem, #probs, #submitCode{
+  float: left;
   margin-right: 1%;
+}
+
+#createProblem{
+  margin-top: 1%;
+}
+
+.admin{
+    display:none;
 }

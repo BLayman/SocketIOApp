@@ -1,39 +1,43 @@
 const Sequelize = require('sequelize');
 const db = require('./db2');
-var connection = db.sequelize;
+const connection = db.sequelize;
 
 // posts model
-var Posts = db.posts;
+let Posts = db.posts;
 
 // methods on the posts model
 module.exports = function () {
   // method for inserting posts
-  this.addPost = function (userID, post, callback) {
+  this.addPost = function (userID, post, postCategory, successCallback = () => {},failureCallback = (err) => {}) {
     connection.sync(/*{force:true}*/).then(function () {
       // create new row using userID and post as arguments
       Posts.create({
         studentID : userID,
-        postBody: post
+        postBody: post,
+        group: postCategory
       })
       .then(function (insertedUser) {
         console.log('* Inserted *');
-        if (typeof callback === 'function') callback();
+        successCallback();
         //console.log(insertedUser.dataValues);
       })
       .catch(function (err) {
-        console.log(' ERROR: ' + err.name);
-        if (typeof callback === 'function') callback();
+        console.log(' ERROR: ' + err);
+        failureCallback(err);
       });
     });
   },
 
   // method fo retrieving array of posts
-  this.retrieve = function (success = () => {}, failure = () => {}) {
+  this.retrieve = function (postsGroup, success = () => {}, failure = () => {}) {
     Posts.findAll({
-      attributes: ['postBody']
+      attributes: ['postBody'],
+      where: {
+        group: postsGroup
+      }
     })
     .then(function (records) {
-      var results = []; // array of posts to be sent in callback
+      let results = []; // array of posts to be sent in callback
       records.forEach(function (record){
         results.push(record.dataValues.postBody);
       });
@@ -47,8 +51,12 @@ module.exports = function () {
   },
 
   // for deleting all posts
-  this.deletePosts = function (callback = () => {}) {
-    Posts.destroy({truncate: true});
+  this.deletePosts = function (postsGroup, callback = () => {}) {
+    Posts.destroy({
+      where: {
+        group: postsGroup
+      }
+    });
     callback();
   }
 
