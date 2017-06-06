@@ -9,21 +9,22 @@ const Users = db.users;
 module.exports = function () {
 
   // function for inserting users
-  this.addUser = function (userID, successCallback=(user)=>{}, failureCallback=(error)=>{}) {
-    connection.sync(/*{force:true}*/).then(function () {
-      // create new row using userID argument
-      Users.create({
-        studentID : userID,
-      })
-      .then(function (insertedUser) {
-        console.log(' * Inserted *');
-        successCallback(insertedUser);
-      })
-      .catch(function (err) {
-        console.log(err);
-        failureCallback(err);
+  this.addUser = function (userID) {
+    return new Promise(function (resolve, reject) {
+      connection.sync(/*{force:true}*/).then(function () {
+        // create new row using userID argument
+        Users.create({
+          studentID : userID,
+        })
+        .then(function (insertedUser) {
+          resolve(insertedUser);
+        })
+        .catch(function (err) {
+          reject(err);
+        });
       });
     });
+
   }
 
 }

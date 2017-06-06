@@ -8,7 +8,7 @@ $(document).ready(function() {
     // populate their problem room choices
     console.log(roomList);
     roomList.forEach(function(room){
-      $("#probs").append('<option>' + room + '</option>')
+      $("#probs").append('<option id=\'' + room + '\' >' + room + '</option>')
     });
     // get their user ID
     do{
@@ -84,7 +84,7 @@ $(document).ready(function() {
 
   // add new room for new problem
   socket.on('add room',function (newRoom) {
-    $("#probs").append('<option>' + newRoom + '</option>')
+    $("#probs").append('<option id=\'' + newRoom + '\' >' + newRoom + '</option>')
   });
 
   /* select room */
@@ -94,6 +94,8 @@ $(document).ready(function() {
     event.preventDefault();
     // problem category
     let problem = $('#probs option:selected').text();
+
+    $('#postsTitle').html(problem);
     // send content to server
     socket.emit('join room', problem);
   });
@@ -122,8 +124,10 @@ $(document).ready(function() {
   });
 
   // delete room from dropdown
-  socket.on('room deleted', function (codeList) {
-    $('#probs option:selected').remove();
+  socket.on('room deleted', function (room) {
+    console.log('delete room: ' + room);
+    $('#'+ room).remove();
+    $('#'+ room).remove();
   });
 
 
@@ -141,7 +145,12 @@ $(document).ready(function() {
   // no room category selected
   socket.on('no room',function () {
     // give error message
-    alert("Please select a problem to post to before submitting code.");
+    $('#selectProblem').css('border-color', 'red');
+    setTimeout(function(){
+      alert("Please select a problem to post to before submitting code.");
+      $('#selectProblem').css('border-color', 'inherit');
+    }, 100);
+
   });
 
 });

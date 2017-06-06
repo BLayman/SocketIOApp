@@ -35,7 +35,7 @@ module.exports = {
       type: Sequelize.TEXT,
       unique: false
     },
-    group: {
+    room: {
       type: Sequelize.STRING,
       unique: false
     },

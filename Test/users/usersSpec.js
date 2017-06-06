@@ -26,9 +26,9 @@ describe('addUser', function(){
   // test to make sure that user is actually added to the database
   it('Adds a user into the database users table', function(done){
     // add input user
-    users.addUser(inputUser, function () {
+    users.addUser(inputUser)
+    .then(function () {
       // seach users for students with a student id that matches inputUser
-      let found = false;
       Users.findOne({
         where: {
           studentID: inputUser
@@ -38,10 +38,11 @@ describe('addUser', function(){
         expect(result).to.not.be.null;
         done();
       })
-      /*.catch(function (err) {
-        throw new Error('error');
-      })*/
-    });
+    })
+    .catch(function () {
+      throw new Error('add user failed');
+    })
+
   });
 });
 });

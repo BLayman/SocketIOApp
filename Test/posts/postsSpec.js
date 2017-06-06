@@ -23,18 +23,19 @@ describe('addpost', function(){
   // input letiables
   let inputUser = 0;
   let inputPost = "I am a post";
-  let inputGroup = "problem 1"
+  let inputRoom = "problem 1"
 
   // test if it sucessfully adds a post
   it('adds a post to the database', function(done){
     // add post using input letiables
-    posts.addPost(inputUser,inputPost, inputGroup, function () {
+    posts.addPost(inputUser,inputPost, inputRoom)
+    .then(function () {
       // then seach for added post in Posts model
-      Posts.findOne({
+      return Posts.findOne({
         where: {
           studentID: inputUser,
           postBody: inputPost,
-          group: inputGroup
+          room: inputRoom
         }
       })
       // process result of search
@@ -45,26 +46,24 @@ describe('addpost', function(){
     });
   });
 
-  it('adds another post', function(done){
+  it('adds multiple posts', function(done){
     // add post using input letiables
-    posts.addPost(inputUser,"hello", inputGroup, function () {
-      posts.addPost(inputUser,"hello 2", inputGroup, function () {
-        // then seach for added post in Posts model
-        Posts.findAll({
-          where: {
-            studentID: inputUser,
-            group: inputGroup
-          }
-        })
-        // process result of search
-        .then(function (result) {
-          expect(result).to.have.lengthOf(2);
-          done();
-        })
-        .catch(function (err) {
-          throw new Error(err);
-        })
+    posts.addPost(inputUser,"hello", inputRoom)
+    .then(function () {
+      return posts.addPost(inputUser,"hello 2", inputRoom);
+    })
+    .then(function () {
+      return Posts.findAll({
+        where: {
+          studentID: inputUser,
+          room: inputRoom
+        }
       });
+    })
+    // process result of search
+    .then(function (result) {
+      expect(result).to.have.lengthOf(2);
+      done();
     });
   });
 
@@ -80,26 +79,28 @@ describe('deletePosts', function(){
     });
   });
 
-  it('deletes all posts matching group', function(done){
+  it('deletes all posts matching room', function(done){
     // delete posts
-    posts.deletePosts('group 1', function () {
+    posts.deletePosts('room 1')
+    .then(function () {
       // find all posts left
-      Posts.findAll()
-      .then(function (result) {
-        // the result should be empty
-        expect(result).to.have.lengthOf(1);
-        expect(result[0].dataValues.group).to.equal('group 2');
-        done();
-      })
-    }, function () {
-      throw new Error("failed to delete posts");
+      return Posts.findAll();
+    })
+    .then(function (result) {
+      // the result should be empty
+      expect(result).to.have.lengthOf(1);
+      expect(result[0].dataValues.room).to.equal('room 2');
       done();
+    })
+    .catch(function (error) {
+      console.log(error);
     });
   });
+
 });
 
 describe('retrievePosts',function () {
-  let inputGroup = "group 1"
+  let inputRoom = "room 1"
   // add something to database to be retrieved
   beforeEach(function (done) {
     seed.posts(function () {
@@ -108,14 +109,16 @@ describe('retrievePosts',function () {
   });
 
   it('sends an array of results to the success callback', function (done) {
-    posts.retrieve(inputGroup, function (results) {
+    posts.retrieve(inputRoom)
+    .then(function (results) {
       expect(results).to.include.members(['post 1','post 2']);
       expect(results).to.not.include('post 3');
       done();
-    },
-    function (err) {
-        throw new Error('retrieve failed');
     })
-  })
-})
+    .catch(function (error) {
+      console.log(error);
+    });
+  });
+
+});
 });

@@ -33,18 +33,18 @@ module.exports = function () {
       let p1 = Posts.create({
         studentID : 1,
         postBody: 'post 1',
-        group: 'group 1'
+        room: 'room 1'
       })
       let p2 = Posts.create({
         studentID : 2,
         postBody: 'post 2',
-        group: 'group 1'
+        room: 'room 1'
       });
-      // different group
+      // different room
       let p3 = Posts.create({
         studentID : 3,
         postBody: 'post 3',
-        group: 'group 2'
+        room: 'room 2'
       });
       Promise.all([p1,p2,p3])
       .then(function () {

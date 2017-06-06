@@ -3,6 +3,7 @@ body{
 }
 button{
   font-size: 1.2vw;
+  border-color: inherit;
 }
 select{
   font-size: 1.2vw;
