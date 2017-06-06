@@ -2,7 +2,7 @@
 const postsCon = require('../database/posts')
 let posts = new postsCon();
 
-let roomList = require('./server').roomList;
+let roomList = [];
 console.log(roomList);
 
 
@@ -44,16 +44,21 @@ module.exports = class {
   }
 
   deleteRoom(room){
+    // remove room from roomList
     let index = roomList.indexOf(room);
-    console.log(roomList);
     roomList.splice(index, 1);
-    console.log(roomList);
+
     // delete posts contained in that room
     posts.deletePosts(room)
     .then(() => {console.log('deleted posts in room : ' + room);})
     .catch((err) => {console.log(err);});
     // notify all clients
     this.io.emit('room deleted', room);
+  }
+  
+  // get roomList variable
+  getRoomList(){
+    return roomList;
   }
 
 }
