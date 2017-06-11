@@ -1,5 +1,6 @@
 /* Imports */
-
+// path
+const path = require('path');
 // express
 const express = require('express');
 let app = express();
@@ -14,7 +15,7 @@ const UserIO = require('./UserIO');
 
 /* express */
 // send files in Public folder
-app.use(express.static("../Public"));
+app.use(express.static(path.join(__dirname, '/../Public')));
 
 /* io */
 // io connection
