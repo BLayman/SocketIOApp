@@ -66,6 +66,6 @@ io.on('connection',function(socket){
 });
 
 // server listens on
-server.listen(3000 || process.env.PORT,function () {
-  console.log('listening on 3000');
+server.listen(8080 || process.env.PORT,function () {
+  console.log('listening on 8080');
 });
