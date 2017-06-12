@@ -2,10 +2,12 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 
 import { AppComponent } from './app.component';
+import { probSelectComponent} from './probSelect/probSelect.component'
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    probSelectComponent
   ],
   imports: [
     BrowserModule
