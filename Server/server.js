@@ -15,7 +15,7 @@ const UserIO = require('./UserIO');
 
 /* express */
 // send files in Public folder
-app.use(express.static(path.join(__dirname, '/../Public')));
+app.use(express.static(path.join(__dirname, '/../angular-app/dist')));
 
 /* io */
 // io connection
