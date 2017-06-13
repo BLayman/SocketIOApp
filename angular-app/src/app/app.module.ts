@@ -3,11 +3,15 @@ import { NgModule } from '@angular/core';
 
 import { AppComponent } from './app.component';
 import { probSelectComponent} from './probSelect/probSelect.component'
+import { submitPostComponent } from "./submitPost/submitPost.component";
+import {postsDisplayComponent} from "./postsDisplay/postsDisplay.component";
 
 @NgModule({
   declarations: [
     AppComponent,
-    probSelectComponent
+    probSelectComponent,
+    submitPostComponent,
+    postsDisplayComponent
   ],
   imports: [
     BrowserModule

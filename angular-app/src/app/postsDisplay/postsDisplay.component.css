@@ -1,0 +1,28 @@
+.codeBox{
+  background-color: black;
+  color: white;
+  width: 65%%;
+  margin-left: 30%;
+  margin-right: 5%;
+  font-size: 1.4vw;
+  padding: 1%;
+  white-space: pre-wrap;
+}
+.post{
+  background-color:rgb(50,50,50);
+  border-style:groove;
+  color:white;
+  font-size: .9vw;
+  white-space: pre-wrap;
+}
+.post:hover{
+  background-color:darkBlue;
+}
+.post:active{
+  background-color:blue;
+}
+
+#posts{
+  width:25%;
+  float:left;
+}
