@@ -6,6 +6,6 @@
 
 <!-- post buttons -->
 <button id="submitCode">Submit code</button>
-<button id="clear" class='admin' disabled>Clear Submissions</button>
+<button id="clear" *ngIf="admin == true">Clear Submissions</button>
 <br>
 <br>

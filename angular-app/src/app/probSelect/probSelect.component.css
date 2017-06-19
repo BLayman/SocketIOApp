@@ -1,8 +1,4 @@
-#selectProblem, #probs, #submitCode{
+#selectProblem, #probs, #createProblem{
   float: left;
   margin-right: 1%;
-}
-
-#createProblem{
-  margin-top: 1%;
 }

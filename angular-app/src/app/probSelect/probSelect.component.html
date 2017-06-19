@@ -8,6 +8,6 @@
 
   <!-- drop down buttons -->
   <button id="selectProblem">Select</button>
-  <button id="deleteProblem" class='admin' disabled >Delete</button>
-  <button id="createProblem" class='admin' disabled >Create New Category</button>
+  <button id="deleteProblem" *ngIf="admin == true">Delete</button>
+  <button id="createProblem" *ngIf="admin == true" >Create New Category</button>
   <br>

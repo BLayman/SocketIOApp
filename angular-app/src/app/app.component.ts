@@ -7,4 +7,5 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'Code Share app';
+  admin = true; // TODO connect to child components
 }

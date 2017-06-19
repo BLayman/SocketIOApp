@@ -6,5 +6,5 @@ import { Component } from '@angular/core';
   styleUrls: ['./probSelect.component.css']
 })
 export class probSelectComponent {
-  
+  admin = true;
 }
