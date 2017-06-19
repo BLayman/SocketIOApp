@@ -1,10 +1,11 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 
 @Component({
   selector: 'prob-select',
   templateUrl: './probSelect.component.html',
   styleUrls: ['./probSelect.component.css']
 })
+
 export class probSelectComponent {
-  admin = true;
+  @Input() admin: boolean;   
 }

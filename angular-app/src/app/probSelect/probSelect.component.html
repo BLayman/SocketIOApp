@@ -9,5 +9,5 @@
   <!-- drop down buttons -->
   <button id="selectProblem">Select</button>
   <button id="deleteProblem" *ngIf="admin == true">Delete</button>
-  <button id="createProblem" *ngIf="admin == true" >Create New Category</button>
+  <button id="createProblem" [hidden]= "!admin" >Create New Category</button>
   <br>

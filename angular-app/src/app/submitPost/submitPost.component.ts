@@ -1,4 +1,4 @@
-import { Component } from "@angular/core";
+import { Component, Input } from "@angular/core";
 
 @Component({
   selector: 'submit-post',
@@ -6,5 +6,5 @@ import { Component } from "@angular/core";
   styleUrls: ['./submitPost.component.css']
 })
 export class submitPostComponent {
-  admin = true;
+  @Input() admin: boolean;
 }
