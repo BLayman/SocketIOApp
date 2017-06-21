@@ -27,7 +27,6 @@ io.on('connection',function(socket){
   const userIO = new UserIO(socket, io);
   // emit join event, sending list of problem rooms
   socket.emit('join', roomIO.getRoomList());
-
   /* user IO */
   // listen for addition of new user
   socket.on('addUser', function (userID){

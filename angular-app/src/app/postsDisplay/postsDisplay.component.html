@@ -1,12 +1,12 @@
 <!-- posts list div -->
 <h3 id="postsTitle"></h3>
 <div id="posts">
-  <pre class = "post" *ngFor= "let post of posts">{{post.body}}</pre>
+  <pre class = "post" *ngFor= "let post of posts" (click)="viewPost(post)">{{post.body}}</pre>
 </div>
 
 <!-- code main display -->
 <pre class="codeBox">
   <p id="displayCode">
-    Code displayed here.
+    {{selectedPost.body}}
   </p>
 </pre>

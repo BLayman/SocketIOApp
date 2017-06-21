@@ -2,21 +2,25 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 
 import { AppComponent } from './app.component';
-import { probSelectComponent} from './probSelect/probSelect.component'
-import { submitPostComponent } from "./submitPost/submitPost.component";
+import { ProbSelectComponent} from './probSelect/probSelect.component'
+import { SubmitPostComponent } from "./submitPost/submitPost.component";
 import {postsDisplayComponent} from "./postsDisplay/postsDisplay.component";
+import {FormsModule} from "@angular/forms";
+import {PostService} from "./PostsService/PostsService.service";
+import {ProbService} from './ProbsService/ProbsService.service';
 
 @NgModule({
   declarations: [
     AppComponent,
-    probSelectComponent,
-    submitPostComponent,
+    ProbSelectComponent,
+    SubmitPostComponent,
     postsDisplayComponent
   ],
   imports: [
-    BrowserModule
+    BrowserModule,
+    FormsModule
   ],
-  providers: [],
+  providers: [PostService, ProbService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

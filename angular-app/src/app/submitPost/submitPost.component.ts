@@ -5,6 +5,15 @@ import { Component, Input } from "@angular/core";
   templateUrl: './submitPost.component.html',
   styleUrls: ['./submitPost.component.css']
 })
-export class submitPostComponent {
+export class SubmitPostComponent {
   @Input() admin: boolean;
+  textBody : string = "";
+
+  clearSubmissions(){
+    console.log("clear submissions");
+  }
+
+  submitCode(){
+    console.log("submitting: " + this.textBody);
+  }
 }

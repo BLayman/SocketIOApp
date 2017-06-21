@@ -2,12 +2,11 @@
 <h2>Select Problem: </h2>
 
   <!-- drop down menu -->
-  <select name="Problems" id="probs">
-    <option disabled selected value> -- select an option -- </option>
+  <select name="Problems" id="probs" [(ngModel)]="currProb" (change)="selectProblem()">
+    <option *ngFor= "let prob of probs" [value]="prob"> {{prob}} </option>
   </select>
 
   <!-- drop down buttons -->
-  <button id="selectProblem">Select</button>
-  <button id="deleteProblem" *ngIf="admin == true">Delete</button>
-  <button id="createProblem" [hidden]= "!admin" >Create New Category</button>
+  <button id="deleteProblem" *ngIf="admin == true" (click)="deleteProblem()">Delete</button>
+  <button id="createProblem" *ngIf="admin == true" (click)="createProblem()">Create New Category</button>
   <br>
