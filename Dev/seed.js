@@ -56,3 +56,10 @@ module.exports = function () {
     });
   }
 }
+// for command line seeding
+/*
+let modExp = new module.exports();
+modExp.posts(function (arguments) {},function (error) {
+  console.log(error);
+});
+*/

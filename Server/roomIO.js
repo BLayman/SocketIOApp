@@ -33,10 +33,10 @@ module.exports = class {
     this.socket.currRoom = room;
     // retrieve array of posts for that room
     posts.retrieve(room)
-    .then(function (array) {
+    .then(function (posts) {
       // send posts array to be displayed in current client's browser
-      thisInstance.socket.emit('display room', array);
-      console.log(array + ' retrieved');
+      thisInstance.socket.emit('display room', posts);
+      console.log(posts + ' retrieved');
     })
     .catch(function (err) {
       console.log(err);
@@ -55,7 +55,7 @@ module.exports = class {
     // notify all clients
     this.io.emit('room deleted', room);
   }
-  
+
   // get roomList variable
   getRoomList(){
     return roomList;

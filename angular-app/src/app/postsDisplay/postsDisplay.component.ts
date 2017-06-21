@@ -11,11 +11,18 @@ import {PostService} from "../PostsService/PostsService.service";
 export class postsDisplayComponent {
   posts: Post[]; // array of posts bound to our html by structural directive
   selectedPost : Post = {"body" : "Code displayed here."} // default display
+  connection;
 
   constructor(private postService: PostService){}
 
   ngOnInit(){
-    this.posts = this.postService.getPosts();
+    this.connection = this.postService.getPosts("group 1").subscribe(retrievedPosts => {
+      this.posts = (<Post[]>retrievedPosts);
+    });
+  }
+
+  ngOnDestroy() {
+    this.connection.unsubscribe();
   }
 
   viewPost(post){
