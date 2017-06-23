@@ -111,6 +111,17 @@ $(document).ready(function() {
     });
   });
 
+  // no room category selected
+  socket.on('no room',function () {
+    // give error message
+    $('#selectProblem').css('border-color', 'red');
+    setTimeout(function(){
+      alert("Please select a problem to post to before submitting code.");
+      $('#selectProblem').css('border-color', 'inherit');
+    }, 100);
+
+  });
+
   /* delete room */
 
   // admin deletes a room
@@ -142,15 +153,6 @@ $(document).ready(function() {
 
   /* error alerts */
 
-  // no room category selected
-  socket.on('no room',function () {
-    // give error message
-    $('#selectProblem').css('border-color', 'red');
-    setTimeout(function(){
-      alert("Please select a problem to post to before submitting code.");
-      $('#selectProblem').css('border-color', 'inherit');
-    }, 100);
 
-  });
 
 });

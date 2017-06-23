@@ -26,13 +26,8 @@ io.on('connection',function(socket){
   const roomIO = new RoomIO(socket, io);
   const userIO = new UserIO(socket, io);
   // emit join event, sending list of problem rooms
-  socket.emit('join', roomIO.getRoomList());
+  socket.emit('response rooms', roomIO.getRoomList());
 
-  // test communication
-  socket.on('message', (message) => {
-    console.log("recieved a messaage");
-  })
-  
   /* user IO */
   // listen for addition of new user
   socket.on('addUser', function (userID){
@@ -59,12 +54,12 @@ io.on('connection',function(socket){
 
   /* post IO */
   // listen for new post from user
-  socket.on('sendCode', function (postContent) {
-    postIO.processNewPost(postContent)
+  socket.on('new post', function (newPost) {
+    postIO.processNewPost(newPost);
   });
 
   // listen for event to clear code submissions
-  socket.on('clear',function () {
+  socket.on('delete posts',function () {
     // delete posts from current room
     postIO.deletePosts();
   });

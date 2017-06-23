@@ -18,7 +18,7 @@ module.exports = class {
     })
     .catch((err) => {console.log(err);});
     // tell browser to clear content
-    this.io.in(this.socket.currRoom).emit('cleared');
+    this.io.in(this.socket.currRoom).emit('posts deleted');
   }
 
   // new post
@@ -35,7 +35,7 @@ module.exports = class {
       .then(() => {console.log('post added: ' + postContent);})
       .catch((err) => {console.log(err);});
       // broadcast postContent to all users in the currRoom room
-      this.io.in(this.socket.currRoom).emit('sendBack', postContent);
+      this.io.in(this.socket.currRoom).emit('response posts', [postContent]);
     }
   }
 }

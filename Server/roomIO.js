@@ -2,7 +2,7 @@
 const postsCon = require('../database/posts')
 let posts = new postsCon();
 
-let roomList = [];
+let roomList = ["room 1", "room 2"];
 console.log(roomList);
 
 
@@ -18,7 +18,7 @@ module.exports = class {
     roomList.push(newRoom);
     console.log(newRoom + " added to " + roomList);
     // notify all clients of new room
-    this.io.emit('add room', newRoom);
+    this.io.emit('response rooms', [newRoom]);
   }
 
   joinRoom(room){
@@ -35,7 +35,7 @@ module.exports = class {
     posts.retrieve(room)
     .then(function (posts) {
       // send posts array to be displayed in current client's browser
-      thisInstance.socket.emit('display room', posts);
+      thisInstance.socket.emit('response posts', posts);
       console.log(posts + ' retrieved');
     })
     .catch(function (err) {
