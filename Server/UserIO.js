@@ -11,9 +11,9 @@ module.exports = class {
 
   addUser(userID){
     // give administrator privaledges to user with this id
-    if (userID == 753){
+    if (userID == 54){
       // tell browser to display admin content
-      this.socket.emit('admin');  this.socket.currRoom = ''; // current problem room
+      this.socket.emit('admin');  
     }
     // set currentUser to whatever ID was given by the client
     this.socket.currentUserID = userID;

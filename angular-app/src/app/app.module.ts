@@ -8,6 +8,7 @@ import {postsDisplayComponent} from "./postsDisplay/postsDisplay.component";
 import {FormsModule} from "@angular/forms";
 import {PostService} from "./PostsService/PostsService.service";
 import {ProbService} from './ProbsService/ProbsService.service';
+import {UserService} from './UserService/UserService.service';
 
 @NgModule({
   declarations: [
@@ -20,7 +21,7 @@ import {ProbService} from './ProbsService/ProbsService.service';
     BrowserModule,
     FormsModule
   ],
-  providers: [PostService, ProbService],
+  providers: [PostService, ProbService, UserService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

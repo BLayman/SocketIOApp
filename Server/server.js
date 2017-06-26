@@ -25,12 +25,13 @@ io.on('connection',function(socket){
   const postIO = new PostIO(socket, io);
   const roomIO = new RoomIO(socket, io);
   const userIO = new UserIO(socket, io);
-  // emit join event, sending list of problem rooms
-  socket.emit('response rooms', roomIO.getRoomList());
 
+  // send rooms to new user
+  socket.emit('response rooms', roomIO.getRoomList());
+  
   /* user IO */
   // listen for addition of new user
-  socket.on('addUser', function (userID){
+  socket.on('add user', function (userID){
     userIO.addUser(userID);
   });
 

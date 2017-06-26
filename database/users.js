@@ -17,6 +17,7 @@ module.exports = function () {
           studentID : userID,
         })
         .then(function (insertedUser) {
+          console.log("user joined: " + userID);
           resolve(insertedUser);
         })
         .catch(function (err) {
