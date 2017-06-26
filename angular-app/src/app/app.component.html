@@ -2,4 +2,4 @@
 <h1>{{title}}</h1>
 <prob-select [postsDisplay]="PD" [admin]="admin"></prob-select>
 <submit-post [admin]="admin"></submit-post>
-<posts-display #PD></posts-display>
+<posts-display [admin]="admin" #PD></posts-display>

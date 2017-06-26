@@ -3,8 +3,6 @@ const postsCon = require('../database/posts')
 let posts = new postsCon();
 
 let roomList = ["room 1", "room 2"];
-console.log(roomList);
-
 
 module.exports = class {
 
@@ -58,6 +56,7 @@ module.exports = class {
 
   // get roomList variable
   getRoomList(){
+    console.log("fetching rooms: " + roomList);
     return roomList;
   }
 

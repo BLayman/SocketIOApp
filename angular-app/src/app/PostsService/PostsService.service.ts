@@ -26,27 +26,15 @@ export class PostService{
 
   requestPosts(room){
     this.socket.emit('join room', room); // join requested room
-    /*
-    let thisInstance : PostService = this; // for accessing class properties
-    // observable sends retrieved posts to the subscriber
-    let observable = new Observable(observer => {
-      // test joining a room
-      this.socket.emit('join room', room); // join requested room
-      // listen for servers response
-      this.socket.on('display room', function (retrieved) {
-        // for each retrieved post body, push it to a new Post in posts
-        retrieved.forEach(post => {
-            thisInstance.posts.push({
-              'body' : post
-            })
-        });
-        // pass posts to observer
-        observer.next(thisInstance.posts);
-      });
-    });
-    // return created observable
-    return observable;
-    */
+  }
+
+  deletePosts(){
+    this.socket.emit('delete posts');
+  }
+
+  listenForDeleted(){
+    let listener = Observable.fromEvent(this.socket, 'posts deleted');
+    return listener;
   }
 
 }

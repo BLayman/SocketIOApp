@@ -12,10 +12,6 @@ export class SubmitPostComponent {
 
   constructor(private postService: PostService){}
 
-  clearSubmissions(){
-    console.log("clear submissions");
-  }
-
   submitCode(){
     console.log("submitting: " + this.textBody);
     this.postService.addPost(this.textBody);
