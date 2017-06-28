@@ -1,11 +1,29 @@
-import { browser, by, element } from 'protractor';
+import { browser, by, element,ExpectedConditions } from 'protractor';
 
-export class AngularAppPage {
+export class Page {
+
   navigateTo() {
-    return browser.get('/');
+    browser.ignoreSynchronization = true;
+    browser.get('/');
   }
 
-  getParagraphText() {
-    return element(by.css('app-root h1')).getText();
+  adminLogin(){
+    browser.wait(ExpectedConditions.alertIsPresent(), 200);
+    let alert = browser.switchTo().alert();
+    alert.sendKeys("54");
+    alert.accept();
   }
+
+  nonAdminLogin(){
+    browser.wait(ExpectedConditions.alertIsPresent(), 200);
+    let alert = browser.switchTo().alert();
+    alert.sendKeys("111");
+    alert.accept();
+  }
+
+
+  getMainTitleText() {
+    return element(by.id('mainTitle')).getText();
+  }
+
 }
