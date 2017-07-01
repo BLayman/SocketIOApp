@@ -28,7 +28,7 @@ io.on('connection',function(socket){
 
   // send rooms to new user
   socket.emit('response rooms', roomIO.getRoomList());
-  
+
   /* user IO */
   // listen for addition of new user
   socket.on('add user', function (userID){
@@ -68,6 +68,7 @@ io.on('connection',function(socket){
 });
 
 // server listens on
-server.listen(8080 || process.env.PORT,function () {
-  console.log('listening on 8080');
+const port = process.env.PORT || 8080;
+server.listen(port, function () {
+  console.log(`listening on: ${port}`);
 });

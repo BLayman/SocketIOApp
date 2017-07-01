@@ -1,5 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import {UserService} from './UserService/UserService.service';
+import {Dialog} from './popup/popup.component';
+import {MdDialog, MdDialogRef} from '@angular/material';
+
 
 @Component({
   selector: 'app-root',
@@ -7,17 +10,34 @@ import {UserService} from './UserService/UserService.service';
   styleUrls: ['./app.component.css'],
 })
 export class AppComponent {
+  dialogRef : MdDialogRef<Dialog>;
   title = 'Code Share app';
-  admin = false;
+  admin : boolean = false;
   userID : string = "";
+  validationError : boolean = false;
 
-  constructor(private userService : UserService){
+  constructor(private userService : UserService, public dialog: MdDialog ){
     this.listenForAdmin();
+    this.openDialog();
   }
 
-  ngOnInit(){
-    this.getUserID();
+  openDialog() {
+  this.dialogRef = this.dialog.open(Dialog,{disableClose: true,});
+  if (this.validationError) {
+    this.dialogRef.componentInstance.errorMsg = "Invalid Nickname or Student ID";
   }
+  this.dialogRef.afterClosed().subscribe(result => {
+    this.dialogRef = null;
+    console.log(result);
+    if(result.stID == "" || result.ncknm == ""){
+      this.validationError = true;
+      this.openDialog();
+    }
+    this.userID = result.stdID;
+    // send their user ID to the server to add it to the database
+    this.userService.addUser(result.stdID);
+  });
+}
 
   listenForAdmin(){
     this.userService.listenForAdmin()
@@ -31,19 +51,5 @@ export class AppComponent {
     );
   }
 
-  getUserID(){
-    // get their user ID
-    // timeout allows room array to be fetched before prompt screen
-    setTimeout(() => {
-      do{
-        var entered = prompt("Enter your student ID");
-      }while(entered == null || entered == "");
-      console.log("user added: " + entered);
-      // send their user ID to the server to add it to the database
-      this.userService.addUser(entered);
-
-    }
-  ,100)
-}
 
 }
