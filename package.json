@@ -7,7 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "server": "node Server/server",
     "start": "node Server/server",
-    "postinstall": "npm postinstall --prefix angular-app"
+    "postinstall": "npm run postinstall --prefix angular-app"
   },
   "author": "Brett",
   "license": "ISC",
