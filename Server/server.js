@@ -3,7 +3,7 @@
 const path = require('path');
 // express
 const express = require('express');
-let app = express();
+const app = express();
 // http server
 const server = require('http').Server(app);
 // socket io

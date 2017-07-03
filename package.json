@@ -5,7 +5,8 @@
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node Server/server"
+    "start": "node Server/server",
+    "postinstall": "cd angular-app  && npm install && ng build --aot -prod"
   },
   "author": "Brett",
   "license": "ISC",
@@ -20,5 +21,9 @@
   "devDependencies": {
     "chai": "^3.5.0",
     "mocha": "^3.4.1"
-  }
+  },
+  "engines": {
+  "node": "8.1.3",
+  "npm": "5.03"
+}
 }
