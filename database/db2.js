@@ -1,8 +1,24 @@
 // establish database connection
 const Sequelize = require('sequelize');
-// const connection = new Sequelize('postgres://testEditor:ezpass3@localhost:5432/test'); // test db
-const connection = new Sequelize('postgres://testEditor:ezpass3@localhost:5432/coshdev',{logging:false}); // dev db
-console.log("connected to database");
+let connection = null;
+
+// if running in heroku environment
+if (process.env.DATABASE_URL) {
+  connection = new Sequelize(process.env.HEROKU_POSTGRESQL_BRONZE_URL, {
+      dialect:  'postgres',
+      protocol: 'postgres',
+      port:     match[4],
+      host:     match[3],
+      logging: true
+    });
+    console.log("connected to database");
+}
+// if running on local host
+else{
+  // const connection = new Sequelize('postgres://testEditor:ezpass3@localhost:5432/test'); // test db
+  connection = new Sequelize('postgres://testEditor:ezpass3@localhost:5432/coshdev',{logging:false}); // dev db
+  console.log("connected to database");
+}
 
 // access to sequelize connection and models
 module.exports = {

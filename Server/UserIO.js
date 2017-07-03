@@ -10,6 +10,7 @@ module.exports = class {
   }
 
   addUser(userID){
+    console.log(userID);
     // give administrator privaledges to user with this id
     if (userID == "54"){
       // tell browser to display admin content

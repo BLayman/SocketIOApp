@@ -33,9 +33,9 @@ export class AppComponent {
       this.validationError = true;
       this.openDialog();
     }
-    this.userID = result.stdID;
+    this.userID = result.stID;
     // send their user ID to the server to add it to the database
-    this.userService.addUser(result.stdID);
+    this.userService.addUser(result.stID);
   });
 }
 
