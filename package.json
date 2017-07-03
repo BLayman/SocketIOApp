@@ -6,8 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "server": "node Server/server",
-    "start": "npm run client && npm run server",
-    "client": "node start-client.js"
+    "start": "node Server/server",
+    "postinstall": "node start-client.js"
   },
   "author": "Brett",
   "license": "ISC",
