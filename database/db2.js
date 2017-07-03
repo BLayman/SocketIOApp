@@ -4,13 +4,7 @@ let connection = null;
 
 // if running in heroku environment
 if (process.env.DATABASE_URL) {
-  connection = new Sequelize(process.env.HEROKU_POSTGRESQL_BRONZE_URL, {
-      dialect:  'postgres',
-      protocol: 'postgres',
-      port:     match[4],
-      host:     match[3],
-      logging: true
-    });
+  connection = new Sequelize(process.env.DATABASE_URL, {logging: false});
     console.log("connected to database");
 }
 // if running on local host
