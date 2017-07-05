@@ -11,7 +11,7 @@ import {MdDialog, MdDialogRef} from '@angular/material';
 })
 export class AppComponent {
   dialogRef : MdDialogRef<Dialog>;
-  title = 'Code Share app';
+  title = 'Share Code';
   admin : boolean = false;
   userID : string = "";
   validationError : boolean = false;
