@@ -1,18 +1,26 @@
 {
-  "name": "angular-app",
-  "version": "0.0.0",
+  "name": "Code_Share",
+  "version": "1.0.0",
+  "description": "Web app for sharing code",
+  "author": "Brett Layman",
   "license": "MIT",
   "scripts": {
     "ng": "ng",
-    "start": "../Server/server",
+    "start": "node Server/server",
     "build": "ng build --watch",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "prod": "ng build --aot -prod"
+    "postinstall": "ng build --aot -prod"
   },
   "private": true,
   "dependencies": {
+    "express": "^4.15.2",
+    "http": "0.0.0",
+    "path": "^0.12.7",
+    "pg": "^6.2.4",
+    "sequelize": "^3.30.4",
+    "socket.io": "^2.0.1",
     "@angular/cli": "1.1.1",
     "@angular/compiler-cli": "^4.0.0",
     "@angular/animations": "^4.1.3",
@@ -34,6 +42,8 @@
     "zone.js": "^0.8.4"
   },
   "devDependencies": {
+    "chai": "^3.5.0",
+    "mocha": "^3.4.1",
     "@angular/language-service": "^4.0.0",
     "@types/jasmine": "2.5.45",
     "@types/node": "~6.0.60",
@@ -51,5 +61,9 @@
     "ts-node": "~3.0.4",
     "tslint": "~5.3.2",
     "typescript": "~2.3.3"
+  },
+  "engines": {
+    "node": "8.1.3",
+    "npm": "5.03"
   }
 }
