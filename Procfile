@@ -1,1 +1,1 @@
-web: node angular-app/Server/server
+web: npm run start
