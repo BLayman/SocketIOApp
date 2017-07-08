@@ -22,22 +22,34 @@ export class AppComponent {
   }
 
   openDialog() {
-  this.dialogRef = this.dialog.open(Dialog,{disableClose: true,});
-  if (this.validationError) {
-    this.dialogRef.componentInstance.errorMsg = "Invalid Nickname or Student ID";
-  }
-  this.dialogRef.afterClosed().subscribe(result => {
-    this.dialogRef = null;
-    console.log(result);
-    if(result.stID == "" || result.ncknm == ""){
-      this.validationError = true;
-      this.openDialog();
+    this.dialogRef = this.dialog.open(Dialog,{disableClose: true,});
+    if (this.validationError) {
+      this.dialogRef.componentInstance.errorMsg = "Invalid Nickname or Student ID";
     }
-    this.userID = result.stID;
-    // send their user ID to the server to add it to the database
-    this.userService.addUser(result.stID);
-  });
-}
+    this.dialogRef.afterClosed().subscribe(result => {
+      this.dialogRef = null;
+      console.log(result);
+      if(result.stID == "" || result.ncknm == ""){
+        this.validationError = true;
+        this.openDialog();
+        return;
+      }
+      this.userService.addUser(result.stID)
+      .then((isValid) => {
+        if (isValid) {
+          console.log("passed verification");
+          this.userID = result.stID;
+        }
+        else{
+          console.log("failed verification");
+          this.validationError = true;
+          this.openDialog();
+          return;
+        }
+      })
+      .catch((error) => {console.log(error);})
+    });
+  }
 
   listenForAdmin(){
     this.userService.listenForAdmin()

@@ -13,7 +13,20 @@ export class UserService{
   }
 
   addUser(user){
-    this.socket.emit("add user", user);
+    return new Promise((resolve, reject) => {
+      this.socket.emit("add user", user);
+      let eventListener = Observable.fromEvent(this.socket, "validation");
+      eventListener.subscribe(
+        (isValid) => {
+            resolve(isValid);
+        },
+        (error) => {
+          console.log(error);
+          reject(error);
+        },
+        () => {console.log("done");
+      });
+    });
   }
 
   listenForAdmin(){
