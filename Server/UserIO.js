@@ -29,7 +29,12 @@ module.exports = class {
     // if user has admin id
     if (this.searchAdmins(userID)){
       // tell browser to display admin content
-      this.socket.emit('admin');
+
+      this.socket.emit('admin', true);
+    }
+    else {
+      // tell browser not to display admin content
+      this.socket.emit('admin', false);
     }
   }
 

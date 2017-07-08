@@ -16,7 +16,6 @@ export class postsDisplayComponent {
   currRoom : string = "";
 
   constructor(private postService: PostService){ // create a PostService variable
-    this.listenForPosts(); // start listening for incomming posts
     this.listenForDeleted();
   }
 

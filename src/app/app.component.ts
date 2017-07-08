@@ -1,8 +1,8 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, ViewChild } from '@angular/core';
 import {UserService} from './UserService/UserService.service';
 import {Dialog} from './popup/popup.component';
 import {MdDialog, MdDialogRef} from '@angular/material';
-
+import {postsDisplayComponent} from "./postsDisplay/postsDisplay.component";
 
 @Component({
   selector: 'app-root',
@@ -10,6 +10,7 @@ import {MdDialog, MdDialogRef} from '@angular/material';
   styleUrls: ['./app.component.css'],
 })
 export class AppComponent {
+  @ViewChild(postsDisplayComponent) postsDisp: postsDisplayComponent;
   dialogRef : MdDialogRef<Dialog>;
   title = 'Share Code';
   admin : boolean = false;
@@ -54,9 +55,12 @@ export class AppComponent {
   listenForAdmin(){
     this.userService.listenForAdmin()
     .subscribe(
-      () => {
-        console.log("administrator");
-        this.admin = true;
+      (isAdmin) => {
+        if (isAdmin) {
+          console.log("administrator");
+          this.admin = true;
+          this.postsDisp.listenForPosts();
+        }
       },
       (error) => {console.log(error);},
       () => {console.log("done");}
