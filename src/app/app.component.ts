@@ -18,8 +18,11 @@ export class AppComponent {
   validationError : boolean = false;
 
   constructor(private userService : UserService, public dialog: MdDialog ){
-    this.listenForAdmin();
     this.openDialog();
+  }
+
+  ngOnInit(){
+    this.listenForAdmin();
   }
 
   openDialog() {
@@ -60,6 +63,10 @@ export class AppComponent {
           console.log("administrator");
           this.admin = true;
           this.postsDisp.listenForPosts();
+        }
+        else{
+          this.admin = false;
+          this.postsDisp.listenForPublished();
         }
       },
       (error) => {console.log(error);},

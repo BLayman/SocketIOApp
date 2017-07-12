@@ -1,3 +1,9 @@
+.highlight{
+  border-radius: 10px;
+  border-style:inset;
+  border-color: red;
+}
+
 .codeBox{
   background-color: black;
   color: white;

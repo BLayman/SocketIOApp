@@ -10,8 +10,9 @@ const server = require('http').Server(app);
 const io = require('socket.io')(server);
 // modules for handling IO behavior
 const PostIO = require('./postIO');
-const RoomIO = require('./roomIO');
 const UserIO = require('./UserIO');
+const RoomIO = require('./roomIO');
+
 
 /* express */
 // send files in Public folder
@@ -20,11 +21,11 @@ app.use(express.static(path.join(__dirname, '/../dist')));
 /* io */
 // io connection
 io.on('connection',function(socket){
-  console.log("io connected");
+  console.log("io connected: " + socket.id);
   // class for managing post IO
   const postIO = new PostIO(socket, io);
-  const roomIO = new RoomIO(socket, io);
   const userIO = new UserIO(socket, io);
+  const roomIO = new RoomIO(socket, io);
 
   // send rooms to new user
   socket.emit('response rooms', roomIO.getRoomList());
@@ -34,13 +35,12 @@ io.on('connection',function(socket){
   socket.on('add user', function (userID){
     userIO.addUser(userID);
   });
-
   /* room IO */
   socket.currRoom = ''; // set invalid default room
 
   // join selected room
   socket.on('join room', function (room) {
-    roomIO.joinRoom(room);
+    roomIO.joinRoom(room, userIO.getAdmin(), postIO.getPublishedPosts());
   });
 
   // creation of new room
@@ -58,6 +58,11 @@ io.on('connection',function(socket){
   socket.on('new post', function (newPost) {
     postIO.processNewPost(newPost);
   });
+
+  // listen for posts published by the admin
+  socket.on("publish posts", function (published) {
+    postIO.processPublished(published);
+  })
 
   // listen for event to clear code submissions
   socket.on('delete posts',function () {

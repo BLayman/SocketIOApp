@@ -12,7 +12,8 @@ import {Input} from '@angular/core';
 export class postsDisplayComponent {
   @Input() admin: boolean;
   posts: Post[] = []; // array of posts bound to our html by structural directive
-  selectedPost : Post = {"body" : "Code displayed here."} // default display
+  selectedPost : Post = {body : "Code displayed here.", selected : true} // default display
+  adminSelected : Post[] = [];
   currRoom : string = "";
 
   constructor(private postService: PostService){ // create a PostService variable
@@ -41,6 +42,22 @@ export class postsDisplayComponent {
     );
   }
 
+  listenForPublished(){
+    console.log("published listener called");
+    let observer = this.postService.listenForPublished();
+    observer.subscribe(
+      retrievedPublished => {
+        console.log("recieved: " + retrievedPublished);
+        this.addPosts(retrievedPublished);
+      }, (error) => {
+        console.error(error);
+      }, () => {
+        console.log("done");
+      }
+    )
+
+  }
+
   listenForDeleted(){
     let deletedObserver = this.postService.listenForDeleted();
     // subscribe to observable that listens for posts
@@ -61,9 +78,14 @@ export class postsDisplayComponent {
   addPosts(newPosts){
     newPosts.forEach(post => {
           this.posts.push({
-          'body' : post
+          body : post,
+          selected: false
         })
   });
+}
+
+publishSelection(){
+  this.postService.publishPosts(this.adminSelected);
 }
 
 clearSubmissions(){
@@ -72,5 +94,23 @@ clearSubmissions(){
   // display post in large text area
   viewPost(post){
     this.selectedPost = post;
+    // if administrator clicks on a post, select or deselect
+    if (this.admin) {
+      // if selected, deselect and remove from adminSelected
+      if (post.selected) {
+        post.selected = false;
+        let index = this.adminSelected.indexOf(post);
+        this.adminSelected.splice(index,1);
+        console.log(this.adminSelected);
+      }
+      // if not yet selected, then select it and add it to adminSelected
+      else{
+        this.adminSelected.push(post);
+        post.selected = true;
+        console.log(this.adminSelected);
+      }
+
+
+    }
   }
 }

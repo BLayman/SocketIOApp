@@ -2,14 +2,14 @@ import {Injectable} from "@angular/core";
 import * as io from "socket.io-client";
 import 'rxjs/Rx';
 import {Observable} from 'rxjs/Observable';
+import {AppService} from "../app.service";
 
 @Injectable()
 export class UserService{
-  private url = 'http://localhost:8080';
   private socket : SocketIOClient.Socket;
 
-  constructor(){
-      this.socket = io();
+  constructor(private appService: AppService){
+      this.socket = appService.socket;
   }
 
   addUser(user){

@@ -1,16 +1,15 @@
 import {PROBS} from "./mockProbs";
 import {Injectable} from "@angular/core";
-import * as io from "socket.io-client";
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/Rx';
+import {AppService} from "../app.service";
 
 @Injectable()
 export class ProbService{
-  private url = 'http://localhost:8080';
   private socket : SocketIOClient.Socket;
 
-  constructor(){
-      this.socket = io();
+  constructor(private appService: AppService){
+      this.socket = appService.socket;;
   }
 
   /* problem addition */

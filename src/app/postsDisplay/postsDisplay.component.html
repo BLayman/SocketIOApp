@@ -1,12 +1,13 @@
 <div>
-  <button *ngIf="admin == true" id="clearPosts" (click)="clearSubmissions()">Clear Submissions</button>
+  <button *ngIf="admin == true" (click)="clearSubmissions()">Clear Submissions</button>
+  <button *ngIf="admin == true" (click)="publishSelection()">Publish Selected</button>
 </div>
 <br>
 <br>
 <!-- posts list div -->
 <h3>{{currRoom}}</h3>
 <div id="posts">
-  <pre class = "post" *ngFor= "let post of posts" (click)="viewPost(post)">{{post.body}}</pre>
+  <pre class = "post" *ngFor= "let post of posts" [class.highlight]="post.selected" (click)="viewPost(post)">{{post.body}}</pre>
 </div>
 
 <!-- code main display -->

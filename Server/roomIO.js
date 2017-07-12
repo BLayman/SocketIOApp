@@ -1,7 +1,6 @@
 // posts table API
 const postsCon = require('../database/posts')
 let posts = new postsCon();
-
 let roomList = ["room 1", "room 2"];
 
 module.exports = class {
@@ -19,7 +18,7 @@ module.exports = class {
     this.io.emit('response rooms', [newRoom]);
   }
 
-  joinRoom(room){
+  joinRoom(room, admin, publishedPosts){
     let thisInstance = this;
     console.log(this.socket.id + ' joined ' + room);
     // leave prevous rooms
@@ -29,16 +28,27 @@ module.exports = class {
     //join new room
     this.socket.join(room);
     this.socket.currRoom = room;
-    // retrieve array of posts for that room
-    posts.retrieve(room)
-    .then(function (posts) {
-      // send posts array to be displayed in current client's browser
-      thisInstance.socket.emit('response posts', posts);
-      console.log(posts + ' retrieved');
-    })
-    .catch(function (err) {
-      console.log(err);
-    })
+    // no need to retrieve posts from database unless user is an admin
+    if (admin) {
+      // retrieve array of posts for that room
+      posts.retrieve(room)
+      .then(function (posts) {
+        // send posts array to be displayed in current client's browser
+        thisInstance.socket.emit('response posts', posts);
+        console.log(posts + ' retrieved');
+      })
+      .catch(function (err) {
+        console.log(err);
+      })
+    }
+    // not admin
+    else{
+      console.log(publishedPosts);
+      if(publishedPosts[room]){
+        this.socket.emit('response published', publishedPosts[room]);
+      }
+    }
+
   }
 
   deleteRoom(room){

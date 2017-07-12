@@ -15,6 +15,7 @@ import {Dialog} from './popup/popup.component';
 import {PostService} from "./PostsService/PostsService.service";
 import {ProbService} from './ProbsService/ProbsService.service';
 import {UserService} from './UserService/UserService.service';
+import {AppService} from "./app.service";
 
 
 @NgModule({
@@ -34,7 +35,7 @@ import {UserService} from './UserService/UserService.service';
     MdDialogModule,
   ],
   entryComponents:[Dialog],
-  providers: [PostService, ProbService, UserService],
+  providers: [AppService,PostService, ProbService, UserService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

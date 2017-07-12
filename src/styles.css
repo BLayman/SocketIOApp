@@ -6,6 +6,7 @@ body{
 button{
   font-size: 1.2vw;
   border-color: inherit;
+  margin-right: 1%;
 }
 select{
   font-size: 1.2vw;

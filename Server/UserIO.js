@@ -4,11 +4,18 @@ let users = new usersCon();
 studentList = ["3","4","5","6","7","8","9"];
 adminList = ["1","2","3"];
 
+
 module.exports = class {
 
   constructor(socket, io){
+    this.admin = {};
     this.socket = socket;
     this.io = io;
+  }
+
+  getAdmin(){
+    //console.log("get admin: " + this.admin.isAdmin);
+    return this.admin.isAdmin;
   }
 
   addUser(userID){
@@ -29,11 +36,13 @@ module.exports = class {
     // if user has admin id
     if (this.searchAdmins(userID)){
       // tell browser to display admin content
-
+      this.admin.isAdmin = true;
+      //console.log("admin: " + this.getAdmin());
       this.socket.emit('admin', true);
     }
     else {
       // tell browser not to display admin content
+      this.admin.isAdmin = false;
       this.socket.emit('admin', false);
     }
   }
