@@ -1,5 +1,5 @@
 <!--The whole content below can be removed with the new code.-->
 <h1 id="mainTitle">{{title}}</h1>
 <prob-select [postsDisplay]="PD" [admin]="admin"></prob-select>
-<submit-post [admin]="admin"></submit-post>
+<submit-post [admin]="admin" [postsDisplay] = "PD"></submit-post>
 <posts-display [admin]="admin" #PD></posts-display>

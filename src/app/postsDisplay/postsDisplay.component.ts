@@ -12,22 +12,43 @@ import {Input} from '@angular/core';
 export class postsDisplayComponent {
   @Input() admin: boolean;
   posts: Post[] = []; // array of posts bound to our html by structural directive
-  selectedPost : Post = {body : "Code displayed here.", selected : true} // default display
-  adminSelected : Post[] = [];
-  currRoom : string = "";
+  selectedPost: Post = { body: "Code displayed here.", selected: true } // default display
+  adminSelected: Post[] = [];
+  currRoom: string = "";
+  storedByRoom: {} = {};
 
-  constructor(private postService: PostService){ // create a PostService variable
+  constructor(private postService: PostService) { // create a PostService variable
     this.listenForDeleted();
   }
 
-  changeRoom(room){
+  postToSelf(post){
+    if(this.storedByRoom[this.currRoom]){
+      this.storedByRoom[this.currRoom].push(post);
+    }
+    else{
+      this.storedByRoom[this.currRoom] = [];
+      this.storedByRoom[this.currRoom].push(post);
+    }
+    this.addPosts([post]);
+    console.log(this.storedByRoom);
+  }
+
+  changeRoom(room) {
+    this.posts = [];
     this.currRoom = room;
     console.log("room changed to: " + room);
-    this.posts = [];
+    if (this.storedByRoom[room]) {
+      console.log(this.storedByRoom[room]);
+      this.addPosts(this.storedByRoom[room]);
+    }
+    else{
+      console.log("no posts yet");
+    }
+    this.adminSelected = [];
     this.postService.requestPosts(room);
   }
 
-  listenForPosts(){
+  listenForPosts() {
     let postObserver = this.postService.listenForPosts();
     // subscribe to observable that listens for posts
     postObserver.subscribe(
@@ -42,7 +63,7 @@ export class postsDisplayComponent {
     );
   }
 
-  listenForPublished(){
+  listenForPublished() {
     console.log("published listener called");
     let observer = this.postService.listenForPublished();
     observer.subscribe(
@@ -58,7 +79,7 @@ export class postsDisplayComponent {
 
   }
 
-  listenForDeleted(){
+  listenForDeleted() {
     let deletedObserver = this.postService.listenForDeleted();
     // subscribe to observable that listens for posts
     deletedObserver.subscribe(
@@ -75,24 +96,24 @@ export class postsDisplayComponent {
     );
   }
   // for converting array of strings to posts
-  addPosts(newPosts){
+  addPosts(newPosts) {
     newPosts.forEach(post => {
-          this.posts.push({
-          body : post,
-          selected: false
-        })
-  });
-}
+      this.posts.push({
+        body: post,
+        selected: false
+      })
+    });
+  }
 
-publishSelection(){
-  this.postService.publishPosts(this.adminSelected);
-}
+  publishSelection() {
+    this.postService.publishPosts(this.adminSelected);
+  }
 
-clearSubmissions(){
-  this.postService.deletePosts();
-}
+  clearSubmissions() {
+    this.postService.deletePosts();
+  }
   // display post in large text area
-  viewPost(post){
+  viewPost(post) {
     this.selectedPost = post;
     // if administrator clicks on a post, select or deselect
     if (this.admin) {
@@ -100,11 +121,11 @@ clearSubmissions(){
       if (post.selected) {
         post.selected = false;
         let index = this.adminSelected.indexOf(post);
-        this.adminSelected.splice(index,1);
+        this.adminSelected.splice(index, 1);
         console.log(this.adminSelected);
       }
       // if not yet selected, then select it and add it to adminSelected
-      else{
+      else {
         this.adminSelected.push(post);
         post.selected = true;
         console.log(this.adminSelected);

@@ -43,11 +43,12 @@ module.exports = class {
       // add published posts to that array property
       published.forEach((post) => publishedPosts[room].push(post));
     }
-    //console.log("postIO this: ");
-    //console.log(this);
-    console.log(publishedPosts);
 
-    this.io.in(this.socket.currRoom).emit('response published', published);
+    console.log(publishedPosts);
+    // if student submitted a post, show it in their display
+      this.socket.emit('response published', published);
+    // if admin submitted the posts, show them to all student users
+      this.io.in(this.socket.currRoom).emit('response published', published);
   }
 
   // new post
