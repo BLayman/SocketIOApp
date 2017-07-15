@@ -27,12 +27,8 @@ export class PostService{
   }
 
   publishPosts(posts){
-    let message = [];
-    posts.forEach(post => {
-      message.push(post.body);
-    });
-    console.log(message);
-    this.socket.emit('publish posts', message);
+    console.log(posts);
+    this.socket.emit('publish posts', posts);
   }
 
   addPost(post){

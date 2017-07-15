@@ -21,7 +21,8 @@ export class postsDisplayComponent {
     this.listenForDeleted();
   }
 
-  postToSelf(post){
+  postToSelf(text, name){
+    let post = {body: text, selected: false, nickname: name};
     if(this.storedByRoom[this.currRoom]){
       this.storedByRoom[this.currRoom].push(post);
     }
@@ -98,6 +99,7 @@ export class postsDisplayComponent {
   // for converting array of strings to posts
   addPosts(newPosts) {
     newPosts.forEach(post => {
+      post.selected = false;
       this.posts.push(post);
     });
   }

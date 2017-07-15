@@ -19,10 +19,10 @@ export class SubmitPostComponent {
 
   submitCode(){
     console.log("submitting: " + this.textBody);
-    this.newPost = {selected:false, body:this.textBody,nickname:this.nickname};
+    this.newPost = {selected:false, body:this.textBody, nickname:this.nickname};
     this.postService.addPost(this.newPost);
     if (!this.admin) {
-      this.postsDisplay.postToSelf(this.textBody);
+      this.postsDisplay.postToSelf(this.textBody, this.nickname);
     }
   }
 }
