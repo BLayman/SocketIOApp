@@ -21,6 +21,7 @@ app.use(express.static(path.join(__dirname, '/../dist')));
 /* io */
 // io connection
 io.on('connection',function(socket){
+  socket.currRoom = "";
   console.log("io connected: " + socket.id);
   // class for managing post IO
   const postIO = new PostIO(socket, io);
@@ -35,8 +36,8 @@ io.on('connection',function(socket){
   socket.on('add user', function (userID){
     userIO.addUser(userID);
   });
+  
   /* room IO */
-  socket.currRoom = ''; // set invalid default room
 
   // join selected room
   socket.on('join room', function (room) {

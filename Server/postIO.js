@@ -52,20 +52,21 @@ module.exports = class {
   }
 
   // new post
-  processNewPost(postContent){
+  processNewPost(post){
     // if no room has been selected, return error
     if(this.socket.currRoom == ""){
       this.socket.emit('no room');
     }
     // otherwise add postContent to posts, and send to all users in room
     else{
-      console.log(postContent + " sent in room " + this.socket.currRoom);
+      console.log(post.body + " sent in room " + this.socket.currRoom);
       // add postContent to posts table in database
-      posts.addPost(this.socket.currentUserID, postContent, this.socket.currRoom)
-      .then(() => {console.log('post added: ' + postContent);})
+      console.log("this.socket.currentUserID: " + this.socket.currentUserID);
+      posts.addPost(this.socket.currentUserID, post.nickname, post.body, this.socket.currRoom)
+      .then(() => {console.log('post added: ' + post.body);})
       .catch((err) => {console.log(err);});
       // broadcast postContent to all users in the currRoom room
-      this.io.in(this.socket.currRoom).emit('response posts', [postContent]);
+      this.io.in(this.socket.currRoom).emit('response posts', [post]);
     }
   }
 }

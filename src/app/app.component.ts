@@ -15,6 +15,7 @@ export class AppComponent {
   title = 'Share Code';
   admin : boolean = false;
   userID : string = "";
+  nickname: string = "";
   validationError : boolean = false;
 
   constructor(private userService : UserService, public dialog: MdDialog ){
@@ -43,6 +44,7 @@ export class AppComponent {
         if (isValid) {
           console.log("passed verification");
           this.userID = result.stID;
+          this.nickname = result.ncknm;
         }
         else{
           console.log("failed verification");

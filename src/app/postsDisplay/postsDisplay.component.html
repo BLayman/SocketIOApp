@@ -7,12 +7,13 @@
 <!-- posts list div -->
 <h3>{{currRoom}}</h3>
 <div id="posts">
-  <pre class = "post" *ngFor= "let post of posts" [class.highlight]="post.selected" (click)="viewPost(post)">{{post.body}}</pre>
+  <div *ngFor= "let post of posts" id="post" [class.highlight]="post.selected" (click)="viewPost(post)">
+    <p>{{post.nickname}}</p>
+    <pre class = "post" >{{post.body}}</pre>
+  </div>
 </div>
 
 <!-- code main display -->
 <pre class="codeBox">
-  <code id="displayCode">
-    {{selectedPost.body}}
-  </code>
+  <code id="displayCode">{{selectedPost.body}}</code>
 </pre>

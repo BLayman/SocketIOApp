@@ -8,12 +8,13 @@ let Posts = db.posts;
 // methods on the posts model
 module.exports = function () {
   // method for inserting posts
-  this.addPost = function (userID, post, postRoom){
+  this.addPost = function (userID, name, post, postRoom){
     return new Promise((resolve, reject) => {
       connection.sync(/*{force:true}*/).then(function () {
         // create new row using userID and post as arguments
         Posts.create({
           studentID : userID,
+          nickname : name,
           postBody: post,
           room: postRoom
         })
@@ -33,7 +34,6 @@ module.exports = function () {
   this.retrieve = function (postsRoom) {
     return new Promise((resolve, reject) => {
       Posts.findAll({
-        attributes: ['postBody'],
         where: {
           room: postsRoom
         }
@@ -41,7 +41,8 @@ module.exports = function () {
       .then(function (records) {
         let results = []; // array of posts to be sent in callback
         records.forEach(function (record){
-          results.push(record.dataValues.postBody);
+          let post = {selected:false, body:record.dataValues.postBody, nickname: record.dataValues.nickname};
+          results.push(post);
         });
         resolve(results);
       })

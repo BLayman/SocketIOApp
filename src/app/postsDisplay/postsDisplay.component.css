@@ -1,6 +1,5 @@
 .highlight{
-  border-radius: 10px;
-  border-style:inset;
+  border-width: 2px;
   border-color: red;
 }
 
@@ -16,19 +15,39 @@
 }
 .post{
   background-color:rgb(50,50,50);
-  border-style:groove;
   color:white;
   font-size: .9vw;
   white-space: pre-wrap;
+  margin: 0px;
 }
-.post:hover{
+#post:hover .post{
   background-color:darkBlue;
 }
-.post:active{
+#post:active .post{
   background-color:blue;
+}
+
+#post:hover{
+  background-color:lightgray;
+  color:black;
+}
+#post:active{
+  background-color:white;
+  color:black;
 }
 
 #posts{
   width:25%;
   float:left;
+}
+
+#post{
+  background-color: rgb(90, 90, 90);
+  color:white;
+  margin-top:5%;
+  border-style:groove;
+}
+p{
+  margin:0px;
+  font-size: 16px;
 }

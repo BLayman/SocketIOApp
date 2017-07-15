@@ -41,6 +41,9 @@ module.exports = {
       type: Sequelize.INTEGER,
       unique: false
     },
+    nickname : {
+      type: Sequelize.STRING,
+    },
     postBody: {
       type: Sequelize.TEXT,
       unique: false

@@ -12,7 +12,7 @@ import {Input} from '@angular/core';
 export class postsDisplayComponent {
   @Input() admin: boolean;
   posts: Post[] = []; // array of posts bound to our html by structural directive
-  selectedPost: Post = { body: "Code displayed here.", selected: true } // default display
+  selectedPost: Post = { body: "Code displayed here.", selected: true, nickname: "" } // default display
   adminSelected: Post[] = [];
   currRoom: string = "";
   storedByRoom: {} = {};
@@ -98,10 +98,7 @@ export class postsDisplayComponent {
   // for converting array of strings to posts
   addPosts(newPosts) {
     newPosts.forEach(post => {
-      this.posts.push({
-        body: post,
-        selected: false
-      })
+      this.posts.push(post);
     });
   }
 
