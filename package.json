@@ -11,7 +11,7 @@
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "deploy": "ng build --aot -prod && git push heroku:master unifiedApp"
+    "deploy": "ng build --aot -prod && git push heroku unifiedApp:master"
   },
   "private": true,
   "dependencies": {
