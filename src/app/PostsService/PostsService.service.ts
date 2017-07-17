@@ -43,8 +43,17 @@ export class PostService{
     this.socket.emit('delete posts');
   }
 
-  listenForDeleted(){
+  clearPublished(currRoom){
+    this.socket.emit('clear published', currRoom);
+  }
+
+  listenForDeletedPosts(){
     let listener = Observable.fromEvent(this.socket, 'posts deleted');
+    return listener;
+  }
+
+  listenForDeletedPublished(){
+    let listener = Observable.fromEvent(this.socket, 'published deleted');
     return listener;
   }
 

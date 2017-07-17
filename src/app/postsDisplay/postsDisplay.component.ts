@@ -12,13 +12,14 @@ import {Input} from '@angular/core';
 export class postsDisplayComponent {
   @Input() admin: boolean;
   posts: Post[] = []; // array of posts bound to our html by structural directive
-  selectedPost: Post = { body: "Code displayed here.", selected: true, nickname: "" } // default display
+  selectedPost: Post = { body: "Code displayed here.", selected: true, nickname: "", viewing: true} // default display
   adminSelected: Post[] = [];
   currRoom: string = "";
   storedByRoom: {} = {};
 
   constructor(private postService: PostService) { // create a PostService variable
-    this.listenForDeleted();
+    this.listenForDeletedPosts();
+    this.listenForDeletedPublished();
   }
 
   postToSelf(text, name){
@@ -65,7 +66,6 @@ export class postsDisplayComponent {
   }
 
   listenForPublished() {
-    console.log("published listener called");
     let observer = this.postService.listenForPublished();
     observer.subscribe(
       retrievedPublished => {
@@ -77,11 +77,29 @@ export class postsDisplayComponent {
         console.log("done");
       }
     )
-
   }
 
-  listenForDeleted() {
-    let deletedObserver = this.postService.listenForDeleted();
+  listenForDeletedPublished(){
+    let observer = this.postService.listenForDeletedPublished();
+    // subscribe to observable that listens for posts
+    observer.subscribe(
+      // when posts are retrieved, add the to posts property
+      () => {
+        console.log("deleted published");
+        if(!this.admin){
+          this.posts = [];
+        }
+      }, (error) => {
+        console.log("error");
+        console.error(error);
+      }, () => {
+        console.log("done");
+      }
+    );
+  }
+
+  listenForDeletedPosts() {
+    let deletedObserver = this.postService.listenForDeletedPosts();
     // subscribe to observable that listens for posts
     deletedObserver.subscribe(
       // when posts are retrieved, add the to posts property
@@ -99,6 +117,7 @@ export class postsDisplayComponent {
   // for converting array of strings to posts
   addPosts(newPosts) {
     newPosts.forEach(post => {
+      post.viewing = false;
       post.selected = false;
       this.posts.push(post);
     });
@@ -111,9 +130,15 @@ export class postsDisplayComponent {
   clearSubmissions() {
     this.postService.deletePosts();
   }
+
+  clearPublished(){
+    this.postService.clearPublished(this.currRoom);
+  }
   // display post in large text area
   viewPost(post) {
+    this.selectedPost.viewing = false;
     this.selectedPost = post;
+    this.selectedPost.viewing = true;
     // if administrator clicks on a post, select or deselect
     if (this.admin) {
       // if selected, deselect and remove from adminSelected
@@ -121,15 +146,13 @@ export class postsDisplayComponent {
         post.selected = false;
         let index = this.adminSelected.indexOf(post);
         this.adminSelected.splice(index, 1);
-        console.log(this.adminSelected);
       }
       // if not yet selected, then select it and add it to adminSelected
       else {
         this.adminSelected.push(post);
         post.selected = true;
-        console.log(this.adminSelected);
       }
-
+      console.log(this.selectedPost);
 
     }
   }

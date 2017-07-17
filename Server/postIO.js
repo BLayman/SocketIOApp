@@ -27,6 +27,11 @@ module.exports = class {
     this.io.in(this.socket.currRoom).emit('posts deleted');
   }
 
+  deletePublished(room){
+    publishedPosts[room] = [];
+    this.io.in(this.socket.currRoom).emit('published deleted');
+  }
+
   // broadcast published posts to other users
   processPublished(published){
     console.log("recieved: " + published);

@@ -36,7 +36,7 @@ io.on('connection',function(socket){
   socket.on('add user', function (userID){
     userIO.addUser(userID);
   });
-  
+
   /* room IO */
 
   // join selected room
@@ -63,6 +63,10 @@ io.on('connection',function(socket){
   // listen for posts published by the admin
   socket.on("publish posts", function (published) {
     postIO.processPublished(published);
+  })
+
+  socket.on("clear published", function (room) {
+    postIO.deletePublished(room);
   })
 
   // listen for event to clear code submissions

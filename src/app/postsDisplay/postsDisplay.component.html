@@ -1,13 +1,14 @@
 <div>
-  <button *ngIf="admin == true" (click)="clearSubmissions()">Clear Submissions</button>
-  <button *ngIf="admin == true" (click)="publishSelection()">Publish Selected</button>
+  <button *ngIf="admin == true" class="delete" (click)="clearSubmissions()">Clear Submissions</button>
+  <button *ngIf="admin == true" class="create" (click)="publishSelection()">Publish Selected</button>
+  <button *ngIf="admin == true" class="delete" (click)="clearPublished()">Clear Published</button>
 </div>
 <br>
 <br>
 <!-- posts list div -->
 <h3>{{currRoom}}</h3>
 <div id="posts">
-  <div *ngFor= "let post of posts" id="post" [class.highlight]="post.selected" (click)="viewPost(post)">
+  <div *ngFor= "let post of posts" id="post" [class.selectedPost]="post.selected" [class.highlight]= "post.viewing" (click)="viewPost(post)">
     <p>{{post.nickname}}</p>
     <pre class = "post" >{{post.body}}</pre>
   </div>

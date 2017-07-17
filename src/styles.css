@@ -11,3 +11,11 @@ button{
 select{
   font-size: 1.2vw;
 }
+
+.create:hover{
+  background-color: rgb(213, 249, 209);
+}
+
+.delete:hover{
+  background-color: rgb(242, 200, 196);
+}

@@ -41,7 +41,7 @@ module.exports = function () {
       .then(function (records) {
         let results = []; // array of posts to be sent in callback
         records.forEach(function (record){
-          let post = {selected:false, body:record.dataValues.postBody, nickname: record.dataValues.nickname};
+          let post = {selected: false, viewing: false, body:record.dataValues.postBody, nickname: record.dataValues.nickname};
           results.push(post);
         });
         resolve(results);

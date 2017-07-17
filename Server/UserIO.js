@@ -1,8 +1,8 @@
 // users table API
 const usersCon = require('../database/users');
 let users = new usersCon();
-studentList = ["3","4","5","6","7","8","9"];
-adminList = ["1","2","3"];
+studentList = process.env.STUDENT_IDS || ["3","4","5","6","7","8","9"];
+adminList = process.env.ADMIN_IDS || ["1","2","3"];
 
 
 module.exports = class {

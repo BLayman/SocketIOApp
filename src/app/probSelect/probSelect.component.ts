@@ -32,8 +32,10 @@ export class ProbSelectComponent {
   createProblem(prob){
     console.log("create new problem");
     let name = prompt("Enter name for new room:");
-    this.probService.addNewProb(name);
-    this.justCreated = true;
+    if(name){
+      this.probService.addNewProb(name);
+      this.justCreated = true;
+    }
   }
 
   listenForProbs(){
