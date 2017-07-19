@@ -74,7 +74,7 @@ export class postsDisplayComponent {
     let observer = this.postService.listenForPublished();
     observer.subscribe(
       retrievedPublished => {
-        console.log("recieved: " + retrievedPublished);
+        console.log("received: " + retrievedPublished);
         this.addPosts(retrievedPublished);
       }, (error) => {
         console.error(error);

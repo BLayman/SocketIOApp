@@ -67,6 +67,7 @@ export class AppComponent {
           this.postsDisp.listenForPosts();
         }
         else{
+          console.log("listening for published");
           this.admin = false;
           this.postsDisp.listenForPublished();
         }

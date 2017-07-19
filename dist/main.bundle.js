@@ -310,6 +310,7 @@ var AppComponent = (function () {
                 _this.postsDisp.listenForPosts();
             }
             else {
+                console.log("listening for published");
                 _this.admin = false;
                 _this.postsDisp.listenForPublished();
             }
@@ -611,7 +612,7 @@ var postsDisplayComponent = (function () {
         var _this = this;
         var observer = this.postService.listenForPublished();
         observer.subscribe(function (retrievedPublished) {
-            console.log("recieved: " + retrievedPublished);
+            console.log("received: " + retrievedPublished);
             _this.addPosts(retrievedPublished);
         }, function (error) {
             console.error(error);
