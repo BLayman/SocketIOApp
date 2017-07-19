@@ -15,7 +15,7 @@ export class postsDisplayComponent {
   selectedPost: Post = { body: "Code displayed here.", selected: true, nickname: "", viewing: true} // default display
   adminSelected: Post[] = [];
   currRoom: string = "";
-  storedByRoom: {} = {};
+  storedByRoom: {} = {}; // client storage of users own posts
 
   constructor(private postService: PostService) { // create a PostService variable
     this.listenForDeletedPosts();
@@ -24,13 +24,18 @@ export class postsDisplayComponent {
 
   postToSelf(text, name){
     let post = {body: text, selected: false, nickname: name};
+    // if the room exists in our object
     if(this.storedByRoom[this.currRoom]){
+      // push new post content
       this.storedByRoom[this.currRoom].push(post);
     }
+    // if the room doesn't yet exist
     else{
+      // create an array at that room key, and push post content
       this.storedByRoom[this.currRoom] = [];
       this.storedByRoom[this.currRoom].push(post);
     }
+    // display new post on screen
     this.addPosts([post]);
     console.log(this.storedByRoom);
   }
@@ -88,6 +93,8 @@ export class postsDisplayComponent {
         console.log("deleted published");
         if(!this.admin){
           this.posts = [];
+          // retain post that were submitted by this user
+          this.addPosts(this.storedByRoom[this.currRoom]);
         }
       }, (error) => {
         console.log("error");
@@ -104,8 +111,10 @@ export class postsDisplayComponent {
     deletedObserver.subscribe(
       // when posts are retrieved, add the to posts property
       () => {
-        console.log("deleted posts");
-        this.posts = [];
+        if (this.admin) {
+          console.log("deleted posts");
+          this.posts = [];
+        }
       }, (error) => {
         console.log("error");
         console.error(error);
@@ -128,6 +137,7 @@ export class postsDisplayComponent {
   }
 
   clearSubmissions() {
+    this.adminSelected = []; // empty adminSelected array so that deleted posts are not published
     this.postService.deletePosts();
   }
 

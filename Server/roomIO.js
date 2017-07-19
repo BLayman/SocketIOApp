@@ -1,15 +1,19 @@
 // posts table API
 const postsCon = require('../database/posts')
 let posts = new postsCon();
-let roomList = ["room 1", "room 2"];
+// default room list
+let roomList = ["problem 1", "problem 2"];
 
+// roomIO class
 module.exports = class {
 
+  // set up socket connection
   constructor(socket, io){
     this.socket = socket;
     this.io = io;
   }
 
+  // called when new room is created
   addRoom(newRoom){
     // add room to roomList
     roomList.push(newRoom);
@@ -18,8 +22,9 @@ module.exports = class {
     this.io.emit('response rooms', [newRoom]);
   }
 
+  // called when a user selects a room
   joinRoom(room, admin, publishedPosts){
-    let thisInstance = this;
+    let thisInstance = this; // for referencing instance variables
     console.log(this.socket.id + ' joined ' + room);
     // leave prevous rooms
     roomList.forEach(function (room){
@@ -28,9 +33,8 @@ module.exports = class {
     //join new room
     this.socket.join(room);
     this.socket.currRoom = room;
-    // no need to retrieve posts from database unless user is an admin
+    // retrieve posts from database if user is an admin
     if (admin) {
-      // retrieve array of posts for that room
       posts.retrieve(room)
       .then(function (posts) {
         // send posts array to be displayed in current client's browser
@@ -43,12 +47,12 @@ module.exports = class {
     }
     // not admin
     else{
+      // send back posts that have been published in that room
       console.log(publishedPosts);
       if(publishedPosts[room]){
         this.socket.emit('response published', publishedPosts[room]);
       }
     }
-
   }
 
   deleteRoom(room){
@@ -64,7 +68,7 @@ module.exports = class {
     this.io.emit('room deleted', room);
   }
 
-  // get roomList variable
+  // get list of rooms
   getRoomList(){
     console.log("fetching rooms: " + roomList);
     return roomList;

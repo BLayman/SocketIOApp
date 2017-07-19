@@ -21,14 +21,14 @@ app.use(express.static(path.join(__dirname, '/../dist')));
 /* io */
 // io connection
 io.on('connection',function(socket){
-  socket.currRoom = "";
+  socket.currRoom = ""; // set default room to be empty string
   console.log("io connected: " + socket.id);
-  // class for managing post IO
+  // create instances of classes for handing posts, users, and rooms
   const postIO = new PostIO(socket, io);
   const userIO = new UserIO(socket, io);
   const roomIO = new RoomIO(socket, io);
 
-  // send rooms to new user
+  // send rooms to new user using list in roomIO
   socket.emit('response rooms', roomIO.getRoomList());
 
   /* user IO */
@@ -41,6 +41,7 @@ io.on('connection',function(socket){
 
   // join selected room
   socket.on('join room', function (room) {
+    console.log("admin: " + userIO.getAdmin());
     roomIO.joinRoom(room, userIO.getAdmin(), postIO.getPublishedPosts());
   });
 

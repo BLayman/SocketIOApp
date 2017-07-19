@@ -1,15 +1,17 @@
 // posts table API
 const postsCon = require('../database/posts')
 let posts = new postsCon();
-publishedPosts = {};
 
+publishedPosts = {}; // posts that an admin has published, with keys as rooms and values as arrays of posts
+
+//postIO class
 module.exports = class {
-
+  // set up socket
   constructor(socket, io){
     this.socket = socket;
     this.io = io;
   }
-
+  // get posts published by admin
   getPublishedPosts(){
     console.log("getPublishedPosts: " + publishedPosts);
     return publishedPosts;
@@ -27,33 +29,32 @@ module.exports = class {
     this.io.in(this.socket.currRoom).emit('posts deleted');
   }
 
+  // clear list of published posts in that room
   deletePublished(room){
     publishedPosts[room] = [];
+    // tell clients to delete all posts in that room
     this.io.in(this.socket.currRoom).emit('published deleted');
   }
 
   // broadcast published posts to other users
   processPublished(published){
-    console.log("recieved: " + published);
+    console.log("received: " + published);
     let room = this.socket.currRoom;
     // if the current room property doesn't yet exist in our object
     if (!publishedPosts[room]) {
-      console.log("found property in publishedPosts");
+      console.log("no property in publishedPosts");
       // create it with the published posts
       publishedPosts[room] = published;
     }
-    // if the property does exist
+    // if the property exists
     else{
-      console.log("no property in publishedPosts");
+      console.log("found property in publishedPosts");
       // add published posts to that array property
       published.forEach((post) => publishedPosts[room].push(post));
     }
-
     console.log(publishedPosts);
-    // if student submitted a post, show it in their display
-      this.socket.emit('response published', published);
-    // if admin submitted the posts, show them to all student users
-      this.io.in(this.socket.currRoom).emit('response published', published);
+    // emit published post to all users in this room
+    this.io.in(this.socket.currRoom).emit('response published', published);
   }
 
   // new post
