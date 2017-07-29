@@ -17,8 +17,8 @@ export class UserService{
       this.socket.emit("add user", user);
       let eventListener = Observable.fromEvent(this.socket, "validation");
       eventListener.subscribe(
-        (isValid) => {
-            resolve(isValid);
+        (resObj) => {
+            resolve(resObj);
         },
         (error) => {
           console.log(error);

@@ -14,18 +14,26 @@ export class SubmitPostComponent {
   @Input() nickname: string;
   @Input() postsDisplay: postsDisplayComponent;
   @Input() probSelect: ProbSelectComponent;
+  @Input() userPK : number;
   newPost : Post;
   textBody : string = "";
 
   constructor(private postService: PostService){}
 
   // when user clicks "Sumbit code"
-  submitCode(){
+  submitCode(primaryKe){
     // if the user is in a valid room
     if (this.probSelect.currProb != this.probSelect.default){
       console.log("submitting: " + this.textBody);
       // create new post with text area content and user's nickname
-      this.newPost = {selected:false, viewing:false, body:this.textBody, nickname:this.nickname};
+      this.newPost = {
+        selected:false,
+        viewing:false,
+        body:this.textBody,
+        nickname:this.nickname,
+        userPK:this.userPK,
+        roomPK:this.probSelect.currKey
+      };
       // send new post to the server
       this.postService.addPost(this.newPost);
       // if user is not an admin, also post the content to their client stored posts object

@@ -3,6 +3,7 @@ import {Post} from '../postsService/post'; // post model
 import {PostService} from "../PostsService/PostsService.service";
 import {Input} from '@angular/core';
 
+
 @Component({
   selector: 'posts-display',
   templateUrl: './postsDisplay.component.html',
@@ -11,8 +12,16 @@ import {Input} from '@angular/core';
 
 export class postsDisplayComponent {
   @Input() admin: boolean;
+
   posts: Post[] = []; // array of posts bound to our html by structural directive
-  selectedPost: Post = { body: "Code displayed here.", selected: true, nickname: "", viewing: true} // default display
+  selectedPost: Post = {
+    body: "Code displayed here.",
+    selected: true,
+    nickname: "",
+    viewing: true,
+    roomPK: -1,
+    userPK: -1
+  }
   adminSelected: Post[] = [];
   currRoom: string = "";
   storedByRoom: {} = {}; // client storage of users own posts
@@ -39,11 +48,16 @@ export class postsDisplayComponent {
     this.addPosts([post]);
     console.log(this.storedByRoom);
   }
-
+  // called by probSelect when room is changed
   changeRoom(room) {
+    // clear out old posts from display
     this.posts = [];
+    // clear out old selection
+    this.adminSelected = [];
+    // change current room to new room name
     this.currRoom = room;
     console.log("room changed to: " + room);
+    // add posts from storedByRoom if there are any
     if (this.storedByRoom[room]) {
       console.log(this.storedByRoom[room]);
       this.addPosts(this.storedByRoom[room]);
@@ -51,8 +65,7 @@ export class postsDisplayComponent {
     else{
       console.log("no posts yet");
     }
-    this.adminSelected = [];
-    this.postService.requestPosts(room);
+
   }
 
   listenForPosts() {
@@ -136,9 +149,11 @@ export class postsDisplayComponent {
     this.postService.publishPosts(this.adminSelected);
   }
 
-  clearSubmissions() {
-    this.adminSelected = []; // empty adminSelected array so that deleted posts are not published
-    this.postService.deletePosts();
+  clearSubmissions(primaryKey) {
+    if (this.currRoom != "") {
+      this.adminSelected = []; // empty adminSelected array so that deleted posts are not published
+      this.postService.deletePosts(primaryKey);
+    }
   }
 
   clearPublished(){

@@ -10,12 +10,12 @@ if (process.env.DATABASE_URL) {
 // if running on local host
 else{
   // const connection = new Sequelize('postgres://testEditor:ezpass3@localhost:5432/test'); // test db
-  connection = new Sequelize('postgres://testEditor:ezpass3@localhost:5432/coshdev',{logging:false}); // dev db
+  connection = new Sequelize('postgres://testEditor:ezpass3@localhost:5432/coshdev',{logging:true}); // dev db
   console.log("connected to database");
 }
 
 // access to sequelize connection and models
-module.exports = {
+const tables = {
   // database connection
   sequelize: connection,
   // users model
@@ -30,6 +30,17 @@ module.exports = {
       unique: false
     }
   }),
+  // rooms table
+  rooms: connection.define('rooms',{
+    id: {
+      type: Sequelize.INTEGER,
+      primaryKey: true,
+      autoIncrement: true
+    },
+    name : {
+      type: Sequelize.STRING
+    }
+  }),
   // posts model
   posts: connection.define('posts',{
     id: {
@@ -37,20 +48,16 @@ module.exports = {
       primaryKey: true,
       autoIncrement: true
     },
-    studentID : {
-      type: Sequelize.INTEGER,
-      unique: false
-    },
     nickname : {
       type: Sequelize.STRING,
     },
     postBody: {
       type: Sequelize.TEXT,
       unique: false
-    },
-    room: {
-      type: Sequelize.STRING,
-      unique: false
-    },
+    }
   })
 }
+
+tables.posts.belongsTo(tables.users);
+tables.posts.belongsTo(tables.rooms);
+module.exports = tables;

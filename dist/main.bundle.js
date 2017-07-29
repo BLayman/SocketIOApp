@@ -62,8 +62,8 @@ var PostService = (function () {
     PostService.prototype.requestPosts = function (room) {
         this.socket.emit('join room', room); // join requested room
     };
-    PostService.prototype.deletePosts = function () {
-        this.socket.emit('delete posts');
+    PostService.prototype.deletePosts = function (roomPK) {
+        this.socket.emit('delete posts', roomPK);
     };
     PostService.prototype.clearPublished = function (currRoom) {
         this.socket.emit('clear published', currRoom);
@@ -131,8 +131,8 @@ var ProbService = (function () {
         var listener = __WEBPACK_IMPORTED_MODULE_1_rxjs_Observable__["Observable"].fromEvent(this.socket, 'room deleted');
         return listener;
     };
-    ProbService.prototype.deleteProb = function (prob) {
-        this.socket.emit("delete room", prob);
+    ProbService.prototype.deleteProb = function (probPK) {
+        this.socket.emit("delete room", probPK);
     };
     return ProbService;
 }());
@@ -180,8 +180,8 @@ var UserService = (function () {
         return new Promise(function (resolve, reject) {
             _this.socket.emit("add user", user);
             var eventListener = __WEBPACK_IMPORTED_MODULE_2_rxjs_Observable__["Observable"].fromEvent(_this.socket, "validation");
-            eventListener.subscribe(function (isValid) {
-                resolve(isValid);
+            eventListener.subscribe(function (resObj) {
+                resolve(resObj);
             }, function (error) {
                 console.log(error);
                 reject(error);
@@ -227,7 +227,7 @@ module.exports = module.exports.toString();
 /***/ "../../../../../src/app/app.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<!--The whole content below can be removed with the new code.-->\r\n<h1 id=\"mainTitle\">{{title}}</h1>\r\n<prob-select [postsDisplay]=\"PD\" [admin]=\"admin\" #PS></prob-select>\r\n<submit-post [admin]=\"admin\" [postsDisplay] = \"PD\" [nickname]=\"nickname\" [probSelect]=\"PS\"></submit-post>\r\n<posts-display [admin]=\"admin\" #PD></posts-display>\r\n"
+module.exports = "<!--The whole content below can be removed with the new code.-->\r\n<h1 id=\"mainTitle\">{{title}}</h1>\r\n<prob-select [postsDisplay]=\"PD\" [admin]=\"admin\" #PS></prob-select>\r\n<submit-post [admin]=\"admin\" [postsDisplay] = \"PD\" [nickname]=\"nickname\" [probSelect]=\"PS\" [userPK]=\"userPK\"></submit-post>\r\n<posts-display [admin]=\"admin\" #PD ></posts-display>\r\n"
 
 /***/ }),
 
@@ -284,9 +284,10 @@ var AppComponent = (function () {
                 return;
             }
             _this.userService.addUser(result.stID)
-                .then(function (isValid) {
-                if (isValid) {
+                .then(function (resObj) {
+                if (resObj.valid) {
                     console.log("passed verification");
+                    _this.userPK = resObj.pk;
                     _this.userID = result.stID;
                     _this.nickname = result.ncknm;
                 }
@@ -557,7 +558,14 @@ var postsDisplayComponent = (function () {
     function postsDisplayComponent(postService) {
         this.postService = postService;
         this.posts = []; // array of posts bound to our html by structural directive
-        this.selectedPost = { body: "Code displayed here.", selected: true, nickname: "", viewing: true }; // default display
+        this.selectedPost = {
+            body: "Code displayed here.",
+            selected: true,
+            nickname: "",
+            viewing: true,
+            roomPK: -1,
+            userPK: -1
+        };
         this.adminSelected = [];
         this.currRoom = "";
         this.storedByRoom = {}; // client storage of users own posts
@@ -580,10 +588,16 @@ var postsDisplayComponent = (function () {
         this.addPosts([post]);
         console.log(this.storedByRoom);
     };
+    // called by probSelect when room is changed
     postsDisplayComponent.prototype.changeRoom = function (room) {
+        // clear out old posts from display
         this.posts = [];
+        // clear out old selection
+        this.adminSelected = [];
+        // change current room to new room name
         this.currRoom = room;
         console.log("room changed to: " + room);
+        // add posts from storedByRoom if there are any
         if (this.storedByRoom[room]) {
             console.log(this.storedByRoom[room]);
             this.addPosts(this.storedByRoom[room]);
@@ -591,8 +605,6 @@ var postsDisplayComponent = (function () {
         else {
             console.log("no posts yet");
         }
-        this.adminSelected = [];
-        this.postService.requestPosts(room);
     };
     postsDisplayComponent.prototype.listenForPosts = function () {
         var _this = this;
@@ -670,9 +682,11 @@ var postsDisplayComponent = (function () {
     postsDisplayComponent.prototype.publishSelection = function () {
         this.postService.publishPosts(this.adminSelected);
     };
-    postsDisplayComponent.prototype.clearSubmissions = function () {
-        this.adminSelected = []; // empty adminSelected array so that deleted posts are not published
-        this.postService.deletePosts();
+    postsDisplayComponent.prototype.clearSubmissions = function (primaryKey) {
+        if (this.currRoom != "") {
+            this.adminSelected = []; // empty adminSelected array so that deleted posts are not published
+            this.postService.deletePosts(primaryKey);
+        }
     };
     postsDisplayComponent.prototype.clearPublished = function () {
         this.postService.clearPublished(this.currRoom);
@@ -748,7 +762,8 @@ module.exports = "<!--The whole content below can be removed with the new code.-
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__ProbsService_ProbsService_service__ = __webpack_require__("../../../../../src/app/ProbsService/ProbsService.service.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__postsDisplay_postsDisplay_component__ = __webpack_require__("../../../../../src/app/postsDisplay/postsDisplay.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__PostsService_PostsService_service__ = __webpack_require__("../../../../../src/app/PostsService/PostsService.service.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__postsDisplay_postsDisplay_component__ = __webpack_require__("../../../../../src/app/postsDisplay/postsDisplay.component.ts");
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return ProbSelectComponent; });
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -762,21 +777,32 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 
 
 
+
 var ProbSelectComponent = (function () {
-    function ProbSelectComponent(probService) {
+    function ProbSelectComponent(probService, postService) {
         this.probService = probService;
+        this.postService = postService;
         this.default = " -- select an option -- ";
+        this.keyVal = {};
         this.probs = [this.default];
         this.justCreated = false;
     }
     ProbSelectComponent.prototype.ngOnInit = function () {
-        this.currProb = this.probs[0];
+        this.currProb = this.default;
+        this.keyVal[this.currProb] = -1;
+        console.log("default current problem: " + this.currProb);
         this.listenForProbs();
         this.listenForDeleted();
     };
     ProbSelectComponent.prototype.selectProblem = function () {
-        console.log(this.currProb + " selected");
+        // get key associated with problem name
+        this.currKey = this.keyVal[this.currProb];
+        console.log("problem: " + this.currProb + " id: " + this.currKey + " selected");
+        console.log(this.keyVal);
+        // change posts displayed to posts in this room
         this.postsDisplay.changeRoom(this.currProb);
+        // request the posts for this room
+        this.postService.requestPosts(this.currKey);
     };
     ProbSelectComponent.prototype.createProblem = function (prob) {
         console.log("create new problem");
@@ -791,12 +817,18 @@ var ProbSelectComponent = (function () {
         var probObserver = this.probService.listenForProbs();
         probObserver.subscribe(function (retrievedProbs) {
             retrievedProbs.forEach(function (prob) {
-                _this.probs.push(prob);
+                // when a new problem has been created, associate problem name with primary key
+                _this.keyVal[prob.name] = prob.pk;
+                // add new problem to dropdown
+                _this.probs.push(prob.name);
+                console.log(_this.probs);
             });
             if (_this.justCreated) {
-                _this.currProb = _this.probs[_this.probs.length - 1];
-                _this.postsDisplay.changeRoom(_this.currProb);
-                _this.justCreated = false;
+                retrievedProbs.forEach(function (prob) {
+                    _this.currProb = prob.name;
+                    _this.selectProblem();
+                    _this.justCreated = false;
+                });
             }
         }, function (error) {
             console.error(error);
@@ -806,20 +838,25 @@ var ProbSelectComponent = (function () {
     };
     ProbSelectComponent.prototype.deleteProblem = function () {
         if (this.currProb != this.default) {
-            console.log(this.currProb + " deleted");
-            this.probService.deleteProb(this.currProb);
+            this.currKey = this.keyVal[this.currProb];
+            console.log("problem " + this.currProb + " with key: " + this.currKey + " deleted");
+            this.probService.deleteProb(this.currKey);
         }
     };
     ProbSelectComponent.prototype.listenForDeleted = function () {
         var _this = this;
         var deletedObserver = this.probService.listenForDeleted();
         deletedObserver.subscribe(function (deleted) {
-            var index = _this.probs.indexOf(deleted);
-            if (index == _this.probs.indexOf(_this.currProb)) {
-                _this.currProb = _this.probs[0];
-                _this.postsDisplay.changeRoom(_this.currProb);
-            }
+            // delete property of keyVal object corresponding to that pk
+            delete _this.keyVal[deleted.name];
+            // remove problem from dropdown
+            var index = _this.probs.indexOf(deleted.name);
             _this.probs.splice(index, 1);
+            // if the user is on that problem, move them back to the default selection
+            if (_this.currProb == deleted.name) {
+                _this.currProb = _this.default;
+                _this.selectProblem();
+            }
         }, function (error) {
             console.error(error);
         }, function () {
@@ -834,7 +871,7 @@ __decorate([
 ], ProbSelectComponent.prototype, "admin", void 0);
 __decorate([
     __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["k" /* Input */])(),
-    __metadata("design:type", typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_2__postsDisplay_postsDisplay_component__["a" /* postsDisplayComponent */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__postsDisplay_postsDisplay_component__["a" /* postsDisplayComponent */]) === "function" && _a || Object)
+    __metadata("design:type", typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_3__postsDisplay_postsDisplay_component__["a" /* postsDisplayComponent */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_3__postsDisplay_postsDisplay_component__["a" /* postsDisplayComponent */]) === "function" && _a || Object)
 ], ProbSelectComponent.prototype, "postsDisplay", void 0);
 ProbSelectComponent = __decorate([
     __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["q" /* Component */])({
@@ -842,10 +879,10 @@ ProbSelectComponent = __decorate([
         template: __webpack_require__("../../../../../src/app/probSelect/probSelect.component.html"),
         styles: [__webpack_require__("../../../../../src/app/probSelect/probSelect.component.css")]
     }),
-    __metadata("design:paramtypes", [typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_1__ProbsService_ProbsService_service__["a" /* ProbService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__ProbsService_ProbsService_service__["a" /* ProbService */]) === "function" && _b || Object])
+    __metadata("design:paramtypes", [typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_1__ProbsService_ProbsService_service__["a" /* ProbService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__ProbsService_ProbsService_service__["a" /* ProbService */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_2__PostsService_PostsService_service__["a" /* PostService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__PostsService_PostsService_service__["a" /* PostService */]) === "function" && _c || Object])
 ], ProbSelectComponent);
 
-var _a, _b;
+var _a, _b, _c;
 //# sourceMappingURL=probSelect.component.js.map
 
 /***/ }),
@@ -903,12 +940,19 @@ var SubmitPostComponent = (function () {
         this.textBody = "";
     }
     // when user clicks "Sumbit code"
-    SubmitPostComponent.prototype.submitCode = function () {
+    SubmitPostComponent.prototype.submitCode = function (primaryKe) {
         // if the user is in a valid room
         if (this.probSelect.currProb != this.probSelect.default) {
             console.log("submitting: " + this.textBody);
             // create new post with text area content and user's nickname
-            this.newPost = { selected: false, viewing: false, body: this.textBody, nickname: this.nickname };
+            this.newPost = {
+                selected: false,
+                viewing: false,
+                body: this.textBody,
+                nickname: this.nickname,
+                userPK: this.userPK,
+                roomPK: this.probSelect.currKey
+            };
             // send new post to the server
             this.postService.addPost(this.newPost);
             // if user is not an admin, also post the content to their client stored posts object
@@ -938,6 +982,10 @@ __decorate([
     __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["k" /* Input */])(),
     __metadata("design:type", typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_3__probSelect_probSelect_component__["a" /* ProbSelectComponent */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_3__probSelect_probSelect_component__["a" /* ProbSelectComponent */]) === "function" && _b || Object)
 ], SubmitPostComponent.prototype, "probSelect", void 0);
+__decorate([
+    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["k" /* Input */])(),
+    __metadata("design:type", Number)
+], SubmitPostComponent.prototype, "userPK", void 0);
 SubmitPostComponent = __decorate([
     __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["q" /* Component */])({
         selector: 'submit-post',

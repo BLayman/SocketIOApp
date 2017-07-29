@@ -1,8 +1,8 @@
 // posts table API
 const postsCon = require('../database/posts')
-let posts = new postsCon();
+const posts = new postsCon();
 
-publishedPosts = {}; // posts that an admin has published, with keys as rooms and values as arrays of posts
+let publishedPosts = {}; // posts that an admin has published, with keys as rooms and values as arrays of posts
 
 //postIO class
 module.exports = class {
@@ -18,11 +18,11 @@ module.exports = class {
   }
 
   // delete posts from current room
-  deletePosts(){
+  deletePosts(roomPK){
     // clear table in database
-    posts.deletePosts(this.socket.currRoom)
+    posts.deletePosts(roomPK)
     .then(function (room) {
-      console.log('deleted posts in room: ' + room);
+      console.log('deleted posts in room id: ' + room);
     })
     .catch((err) => {console.log(err);});
     // tell browser to clear content
@@ -68,7 +68,7 @@ module.exports = class {
       console.log(post.body + " sent in room " + this.socket.currRoom);
       // add postContent to posts table in database
       console.log("this.socket.currentUserID: " + this.socket.currentUserID);
-      posts.addPost(this.socket.currentUserID, post.nickname, post.body, this.socket.currRoom)
+      posts.addPost(post.userPK, post.nickname, post.body, post.roomPK)
       .then(() => {console.log('post added: ' + post.body);})
       .catch((err) => {console.log(err);});
       // broadcast postContent to all users in the currRoom room

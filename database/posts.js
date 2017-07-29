@@ -13,14 +13,14 @@ module.exports = function () {
       connection.sync(/*{force:true}*/).then(function () {
         // create new row using userID and post as arguments
         Posts.create({
-          studentID : userID,
+          usersId : userID,
           nickname : name,
           postBody: post,
-          room: postRoom
+          roomId: postRoom
         })
         .then(function (inserted) {
           resolve(inserted);
-          //console.log(insertedUser.dataValues);
+          //console.log(insertedUser.dataValues.usersId);
         })
         .catch(function (err) {
           console.log(' ERROR: ' + err);
@@ -35,13 +35,20 @@ module.exports = function () {
     return new Promise((resolve, reject) => {
       Posts.findAll({
         where: {
-          room: postsRoom
+          roomId: postsRoom
         }
       })
       .then(function (records) {
         let results = []; // array of posts to be sent in callback
         records.forEach(function (record){
-          let post = {selected: false, viewing: false, body:record.dataValues.postBody, nickname: record.dataValues.nickname};
+          let post = {
+            selected: false,
+            viewing: false,
+            body: record.dataValues.postBody,
+            nickname: record.dataValues.nickname,
+            userPK: record.dataValues.usersPk,
+            roomPK: record.dataValues.roomsPk
+          };
           results.push(post);
         });
         resolve(results);
@@ -57,7 +64,7 @@ module.exports = function () {
     return new Promise(function (resolve, reject) {
       Posts.destroy({
         where: {
-          room: postsRoom
+          roomId: postsRoom
         }
       })
       .then(function () {

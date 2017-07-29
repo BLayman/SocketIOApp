@@ -40,9 +40,9 @@ io.on('connection',function(socket){
   /* room IO */
 
   // join selected room
-  socket.on('join room', function (room) {
+  socket.on('join room', function (roomPK) {
     console.log("admin: " + userIO.getAdmin());
-    roomIO.joinRoom(room, userIO.getAdmin(), postIO.getPublishedPosts());
+    roomIO.joinRoom(roomPK, userIO.getAdmin(), postIO.getPublishedPosts());
   });
 
   // creation of new room
@@ -51,8 +51,8 @@ io.on('connection',function(socket){
   });
 
   // delete a room
-  socket.on('delete room', function (room) {
-      roomIO.deleteRoom(room);
+  socket.on('delete room', function (roomPK) {
+      roomIO.deleteRoom(roomPK);
   });
 
   /* post IO */
@@ -71,9 +71,9 @@ io.on('connection',function(socket){
   })
 
   // listen for event to clear code submissions
-  socket.on('delete posts',function () {
+  socket.on('delete posts',function (roomPK) {
     // delete posts from current room
-    postIO.deletePosts();
+    postIO.deletePosts(roomPK);
   });
 
 });

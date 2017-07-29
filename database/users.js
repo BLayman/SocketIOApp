@@ -18,7 +18,9 @@ module.exports = function () {
         })
         .then(function (insertedUser) {
           console.log("user joined: " + userID);
-          resolve(insertedUser);
+          console.log("primary key: " + insertedUser.dataValues.id);
+          // send primary key with promise resolution
+          resolve(insertedUser.dataValues.id);
         })
         .catch(function (err) {
           reject(err);
@@ -29,7 +31,6 @@ module.exports = function () {
   }
 
 }
-/* test module
-modExp = new module.exports();
+/* test module */
+let modExp = new module.exports();
 modExp.addUser(445);
-*/

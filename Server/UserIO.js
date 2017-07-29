@@ -19,7 +19,7 @@ else{
 module.exports = class {
   // set up socket in constructor
   constructor(socket, io){
-    this.admin; // variable for storing whether on not a user is an admin
+    this.admin = false; // variable for storing whether on not a user is an admin
     this.socket = socket;
     this.io = io;
   }
@@ -35,13 +35,15 @@ module.exports = class {
       // set currentUser to whatever ID was given by the client
       this.socket.currentUserID = userID;
       // add user ID to users table in database
-      users.addUser(userID);
+      users.addUser(userID)
+      .then((userPk) => {
+        this.socket.emit("validation", {valid: true, pk: userPk});
+      })
       // tell browser user is valid
-      this.socket.emit("validation", true);
     }
     else{
       // tell browser user is invalid
-      this.socket.emit("validation", false);
+      this.socket.emit("validation", {valid: false, pk:-1});
     }
     // if user has admin id
     if (this.searchAdmins(userID)){

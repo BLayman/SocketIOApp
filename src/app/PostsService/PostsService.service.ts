@@ -39,8 +39,8 @@ export class PostService{
     this.socket.emit('join room', room); // join requested room
   }
 
-  deletePosts(){
-    this.socket.emit('delete posts');
+  deletePosts(roomPK){
+    this.socket.emit('delete posts', roomPK);
   }
 
   clearPublished(currRoom){

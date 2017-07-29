@@ -3,4 +3,6 @@ export interface Post {
   body: string;
   nickname: string;
   viewing: boolean;
+  userPK: number;
+  roomPK: number;
 }

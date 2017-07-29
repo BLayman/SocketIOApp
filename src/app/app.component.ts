@@ -15,6 +15,7 @@ export class AppComponent {
   title = 'Share Code';
   admin : boolean = false;
   userID : string = "";
+  userPK : number;
   nickname: string = "";
   validationError : boolean = false;
 
@@ -40,9 +41,10 @@ export class AppComponent {
         return;
       }
       this.userService.addUser(result.stID)
-      .then((isValid) => {
-        if (isValid) {
+      .then((resObj: any) => {
+        if (resObj.valid) {
           console.log("passed verification");
+          this.userPK = resObj.pk;
           this.userID = result.stID;
           this.nickname = result.ncknm;
         }
