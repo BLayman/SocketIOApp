@@ -2,6 +2,7 @@
 const postsCon = require('../database/posts')
 const posts = new postsCon();
 
+// DELETE ?
 let publishedPosts = {}; // posts that an admin has published, with keys as rooms and values as arrays of posts
 
 //postIO class
@@ -11,6 +12,7 @@ module.exports = class {
     this.socket = socket;
     this.io = io;
   }
+  // DELETE ?
   // get posts published by admin
   getPublishedPosts(){
     console.log("getPublishedPosts: " + publishedPosts);
@@ -29,6 +31,7 @@ module.exports = class {
     this.io.in(this.socket.currRoom).emit('posts deleted');
   }
 
+  // TODO
   // clear list of published posts in that room
   deletePublished(room){
     publishedPosts[room] = [];
@@ -36,9 +39,10 @@ module.exports = class {
     this.io.in(this.socket.currRoom).emit('published deleted');
   }
 
-  // broadcast published posts to other users
+
   processPublished(published){
-    console.log("received: " + published);
+    console.log("received: ");
+    console.log(published);
     let room = this.socket.currRoom;
     // if the current room property doesn't yet exist in our object
     if (!publishedPosts[room]) {
@@ -57,6 +61,17 @@ module.exports = class {
     this.io.in(this.socket.currRoom).emit('response published', published);
   }
 
+  // mark these posts as published
+  markPublished(published){
+    console.log("received: ");
+    console.log(published);
+    // mark as published in our database
+    published.forEach((post) => {
+      posts.markPublished(post.id);
+    });
+    this.io.in(this.socket.currRoom).emit('response published', published);
+  }
+
   // new post
   processNewPost(post){
     // if no room has been selected, return error
@@ -68,11 +83,14 @@ module.exports = class {
       console.log(post.body + " sent in room " + this.socket.currRoom);
       // add postContent to posts table in database
       console.log("this.socket.currentUserID: " + this.socket.currentUserID);
-      posts.addPost(post.userPK, post.nickname, post.body, post.roomPK)
-      .then(() => {console.log('post added: ' + post.body);})
+      posts.addPost(post)
+      .then((inserted) => {
+        console.log('post added: ')
+        console.log(inserted);
+        // broadcast postContent to all users in the currRoom room
+        this.io.in(this.socket.currRoom).emit('response posts', [inserted]);
+      })
       .catch((err) => {console.log(err);});
-      // broadcast postContent to all users in the currRoom room
-      this.io.in(this.socket.currRoom).emit('response posts', [post]);
     }
   }
 }

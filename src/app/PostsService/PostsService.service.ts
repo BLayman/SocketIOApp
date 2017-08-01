@@ -1,4 +1,3 @@
-import {POSTS} from "./mockPosts";
 import {Injectable} from "@angular/core";
 import { Observable } from 'rxjs/Observable';
 import {Post} from './post';

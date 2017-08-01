@@ -8,19 +8,24 @@ let Posts = db.posts;
 // methods on the posts model
 module.exports = function () {
   // method for inserting posts
-  this.addPost = function (userID, name, post, postRoom){
+  this.addPost = function (post){
     return new Promise((resolve, reject) => {
-      connection.sync(/*{force:true}*/).then(function () {
+      connection.sync().then(function () {
         // create new row using userID and post as arguments
         Posts.create({
-          usersId : userID,
-          nickname : name,
-          postBody: post,
-          roomId: postRoom
+          userId : post.userPK,
+          nickname : post.nickname,
+          postBody: post.body,
+          roomId: post.roomPK,
+          published: false
         })
         .then(function (inserted) {
-          resolve(inserted);
-          //console.log(insertedUser.dataValues.usersId);
+          let refinedPost = post;
+          refinedPost.id = inserted.dataValues.id;
+          console.log("Inserted by user: " + inserted.dataValues.userId);
+          console.log("post refined by database: ");
+          console.log(refinedPost);
+          resolve(refinedPost);
         })
         .catch(function (err) {
           console.log(' ERROR: ' + err);
@@ -28,6 +33,66 @@ module.exports = function () {
         });
       });
     });
+  },
+  // mark a post as published
+  this.markPublished = function (postID) {
+    return new Promise((resolve, reject) => {
+        connection.sync().then(() => {
+            Posts.update({
+              published:true
+            },{
+              where:{id: postID},
+              returning: true
+            })
+            .then(record => {
+              console.log("record: " + record.dataValues);
+              resolve(record.datavalues);
+            })
+            .catch((err) => {
+              console.log(err);
+              reject(err);
+            })
+        })
+    })
+  },
+
+  this.retrievePublished = function (postsRoomPK) {
+    return new Promise((resolve, reject) => {
+        Posts.findAll({
+          where: {
+            roomId : postsRoomPK,
+            published: true
+          }
+        })
+        .then(records => {
+          resolve(records);
+        })
+        .catch(err => {
+          console.log(err);
+          reject(err);
+        })
+    })
+  },
+
+  this.unmarkPublished = function (postID) {
+    return new Promise((resolve, reject) => {
+        connection.sync().then(() => {
+            Posts.update({
+              published:false
+            },{
+              where:{id: postID},
+              returning: true
+            })
+            .then(result => {
+              console.log(result);
+              resolve(result);
+            })
+            .catch((err) => {
+              console.log(err);
+              reject(err);
+            })
+        })
+    })
   },
 
   // method fo retrieving array of posts
@@ -39,19 +104,7 @@ module.exports = function () {
         }
       })
       .then(function (records) {
-        let results = []; // array of posts to be sent in callback
-        records.forEach(function (record){
-          let post = {
-            selected: false,
-            viewing: false,
-            body: record.dataValues.postBody,
-            nickname: record.dataValues.nickname,
-            userPK: record.dataValues.usersPk,
-            roomPK: record.dataValues.roomsPk
-          };
-          results.push(post);
-        });
-        resolve(results);
+        resolve(records);
       })
       .catch(function (err) {
         reject(err);
@@ -74,7 +127,6 @@ module.exports = function () {
         reject("failed to delete posts");
       });
     });
-
   }
 
 }

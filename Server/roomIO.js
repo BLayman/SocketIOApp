@@ -39,7 +39,7 @@ module.exports = class {
     console.log(this.socket.id + ' joined room pk: ' + roomPK);
     // leave prevous room
     this.socket.leave(this.socket.currRoom);
-    /*
+    /* DELETE?
     roomList.forEach(function (room){
       thisInstance.socket.leave(room);
     });
@@ -50,10 +50,24 @@ module.exports = class {
     // retrieve posts from database if user is an admin
     if (admin) {
       posts.retrieve(roomPK)
-      .then(function (posts) {
+      .then(function (records) {
+        let results = []; // array of posts to be sent in callback
+        records.forEach(function (record){
+          let post = {
+            selected: false,
+            viewing: false,
+            body: record.dataValues.postBody,
+            nickname: record.dataValues.nickname,
+            userPK: record.dataValues.usersPk,
+            roomPK: record.dataValues.roomsPk,
+            id: record.dataValues.id
+          };
+          results.push(post);
+        });
         // send posts array to be displayed in current client's browser
-        thisInstance.socket.emit('response posts', posts);
-        console.log(posts + ' retrieved');
+        thisInstance.socket.emit('response posts', results);
+        console.log(results)
+        console.log(' retrieved');
       })
       .catch(function (err) {
         console.log(err);
@@ -62,14 +76,36 @@ module.exports = class {
     // not admin
     else{
       // send back posts that have been published in that room
+      posts.retrievePublished(roomPK)
+      .then(records => {
+        let results = [];
+        records.forEach((record) => {
+          let post = {
+            selected: false,
+            viewing: false,
+            body: record.dataValues.postBody,
+            nickname: record.dataValues.nickname,
+            userPK: record.dataValues.usersPk,
+            roomPK: record.dataValues.roomsPk,
+            id: record.dataValues.id
+          }
+          results.push(post);
+        });
+        thisInstance.socket.emit('response published', results);
+        console.log('published retrieved: ');
+        console.log(results);
+      })
+      /* DELETE?
       console.log(publishedPosts);
       if(publishedPosts[roomPK]){
         this.socket.emit('response published', publishedPosts[roomPK]);
       }
+      */
     }
   }
 
   deleteRoom(roomPK){
+    //TODO
     // remove room from roomList
     //let index = roomList.indexOf(/*****/);
     //roomList.splice(index, 1);

@@ -63,7 +63,7 @@ io.on('connection',function(socket){
 
   // listen for posts published by the admin
   socket.on("publish posts", function (published) {
-    postIO.processPublished(published);
+    postIO.markPublished(published);
   })
 
   socket.on("clear published", function (room) {

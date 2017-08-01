@@ -54,6 +54,11 @@ const tables = {
     postBody: {
       type: Sequelize.TEXT,
       unique: false
+    },
+    published:
+    {
+      type: Sequelize.BOOLEAN,
+      defaultValue: false
     }
   })
 }

@@ -5,4 +5,5 @@ export interface Post {
   viewing: boolean;
   userPK: number;
   roomPK: number;
+  id: number;
 }

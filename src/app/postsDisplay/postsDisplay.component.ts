@@ -20,7 +20,8 @@ export class postsDisplayComponent {
     nickname: "",
     viewing: true,
     roomPK: -1,
-    userPK: -1
+    userPK: -1,
+    id: -1
   }
   adminSelected: Post[] = [];
   currRoom: string = "";
@@ -31,8 +32,7 @@ export class postsDisplayComponent {
     this.listenForDeletedPublished();
   }
 
-  postToSelf(text, name){
-    let post = {body: text, selected: false, nickname: name};
+  postToSelf(post){
     // if the room exists in our object
     if(this.storedByRoom[this.currRoom]){
       // push new post content
@@ -87,7 +87,8 @@ export class postsDisplayComponent {
     let observer = this.postService.listenForPublished();
     observer.subscribe(
       retrievedPublished => {
-        console.log("received: " + retrievedPublished);
+        console.log("received: ");
+        console.log(retrievedPublished);
         this.addPosts(retrievedPublished);
       }, (error) => {
         console.error(error);

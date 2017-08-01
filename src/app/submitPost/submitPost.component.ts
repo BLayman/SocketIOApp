@@ -21,7 +21,7 @@ export class SubmitPostComponent {
   constructor(private postService: PostService){}
 
   // when user clicks "Sumbit code"
-  submitCode(primaryKe){
+  submitCode(){
     // if the user is in a valid room
     if (this.probSelect.currProb != this.probSelect.default){
       console.log("submitting: " + this.textBody);
@@ -32,13 +32,14 @@ export class SubmitPostComponent {
         body:this.textBody,
         nickname:this.nickname,
         userPK:this.userPK,
-        roomPK:this.probSelect.currKey
+        roomPK:this.probSelect.currKey,
+        id:-1
       };
       // send new post to the server
       this.postService.addPost(this.newPost);
       // if user is not an admin, also post the content to their client stored posts object
       if (!this.admin) {
-        this.postsDisplay.postToSelf(this.textBody, this.nickname);
+        this.postsDisplay.postToSelf(this.newPost);
       }
     }
     // alert if no room has been selected

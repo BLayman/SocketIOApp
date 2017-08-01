@@ -564,7 +564,8 @@ var postsDisplayComponent = (function () {
             nickname: "",
             viewing: true,
             roomPK: -1,
-            userPK: -1
+            userPK: -1,
+            id: -1
         };
         this.adminSelected = [];
         this.currRoom = "";
@@ -572,8 +573,7 @@ var postsDisplayComponent = (function () {
         this.listenForDeletedPosts();
         this.listenForDeletedPublished();
     }
-    postsDisplayComponent.prototype.postToSelf = function (text, name) {
-        var post = { body: text, selected: false, nickname: name };
+    postsDisplayComponent.prototype.postToSelf = function (post) {
         // if the room exists in our object
         if (this.storedByRoom[this.currRoom]) {
             // push new post content
@@ -624,7 +624,8 @@ var postsDisplayComponent = (function () {
         var _this = this;
         var observer = this.postService.listenForPublished();
         observer.subscribe(function (retrievedPublished) {
-            console.log("received: " + retrievedPublished);
+            console.log("received: ");
+            console.log(retrievedPublished);
             _this.addPosts(retrievedPublished);
         }, function (error) {
             console.error(error);
@@ -940,7 +941,7 @@ var SubmitPostComponent = (function () {
         this.textBody = "";
     }
     // when user clicks "Sumbit code"
-    SubmitPostComponent.prototype.submitCode = function (primaryKe) {
+    SubmitPostComponent.prototype.submitCode = function () {
         // if the user is in a valid room
         if (this.probSelect.currProb != this.probSelect.default) {
             console.log("submitting: " + this.textBody);
@@ -951,13 +952,14 @@ var SubmitPostComponent = (function () {
                 body: this.textBody,
                 nickname: this.nickname,
                 userPK: this.userPK,
-                roomPK: this.probSelect.currKey
+                roomPK: this.probSelect.currKey,
+                id: -1
             };
             // send new post to the server
             this.postService.addPost(this.newPost);
             // if user is not an admin, also post the content to their client stored posts object
             if (!this.admin) {
-                this.postsDisplay.postToSelf(this.textBody, this.nickname);
+                this.postsDisplay.postToSelf(this.newPost);
             }
         }
         else {
