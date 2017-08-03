@@ -6,13 +6,15 @@ let studentList;
 let adminList;
 // if their or config variables defining these lists, use those
 if (process.env.STUDENT_IDS && process.env.ADMIN_IDS) {
-  studentList = process.env.STUDENT_IDS.split(' ');
-  adminList = process.env.ADMIN_IDS.split(' ');
+  let tempStudentList = process.env.STUDENT_IDS.split(' ');
+  let tempAdminList = process.env.ADMIN_IDS.split(' ');
+  studentList = new Set(tempStudentList);
+  adminList = new Set(tempAdminList);
 }
 // otherwise use test lists
 else{
-  studentList = ["3","4","5","6","7","8","9"];
-  adminList = ["1","2","3"];
+  studentList = new Set(["3","4","5","6","7","8","9"]);
+  adminList = new Set(["1","2","3"]);
 }
 
 // UserIO class
@@ -58,22 +60,11 @@ module.exports = class {
     }
   }
   // determing if user has a valid student ID
-  searchStudents(student){
-    for (var i = 0; i < studentList.length; i++) {
-      if (studentList[i] == student){
-        return true;
-      }
-    }
-    return false;
+  searchStudents(user){
+    return studentList.has(user);
   }
   // determing if user has a valid admin ID
-  searchAdmins(student){
-    for (var i = 0; i < adminList.length; i++) {
-      if (adminList[i] == student){
-        return true;
-      }
-    }
-    return false;
+  searchAdmins(user){
+    return adminList.has(user);
   }
-
 }
