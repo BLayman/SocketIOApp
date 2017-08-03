@@ -41,6 +41,11 @@ export class ProbSelectComponent {
     this.postService.requestPosts(this.currKey);
   }
 
+  getCurrKey(){
+    this.currKey = this.keyVal[this.currProb];
+    return this.currKey;
+  }
+
 
   createProblem(prob){
     console.log("create new problem");

@@ -120,7 +120,8 @@ module.exports = function () {
           roomId: postsRoom
         }
       })
-      .then(function () {
+      .then(function (rows) {
+        console.log("rows destroyed: " + rows);
         resolve(postsRoom);
       })
       .catch(function () {

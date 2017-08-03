@@ -227,7 +227,7 @@ module.exports = module.exports.toString();
 /***/ "../../../../../src/app/app.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<!--The whole content below can be removed with the new code.-->\r\n<h1 id=\"mainTitle\">{{title}}</h1>\r\n<prob-select [postsDisplay]=\"PD\" [admin]=\"admin\" #PS></prob-select>\r\n<submit-post [admin]=\"admin\" [postsDisplay] = \"PD\" [nickname]=\"nickname\" [probSelect]=\"PS\" [userPK]=\"userPK\"></submit-post>\r\n<posts-display [admin]=\"admin\" #PD ></posts-display>\r\n"
+module.exports = "<!--The whole content below can be removed with the new code.-->\r\n<h1 id=\"mainTitle\">{{title}}</h1>\r\n<prob-select [postsDisplay]=\"PD\" [admin]=\"admin\" #PS></prob-select>\r\n<submit-post [admin]=\"admin\" [postsDisplay] = \"PD\" [nickname]=\"nickname\" [probSelect]=\"PS\" [userPK]=\"userPK\"></submit-post>\r\n<posts-display [admin]=\"admin\" #PD [probSelect] = \"PS\"></posts-display>\r\n"
 
 /***/ }),
 
@@ -541,6 +541,7 @@ module.exports = "<div>\r\n  <button *ngIf=\"admin == true\" class=\"delete\" (c
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__PostsService_PostsService_service__ = __webpack_require__("../../../../../src/app/PostsService/PostsService.service.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__probSelect_probSelect_component__ = __webpack_require__("../../../../../src/app/probSelect/probSelect.component.ts");
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return postsDisplayComponent; });
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -551,6 +552,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
+
 
 
 
@@ -683,10 +685,10 @@ var postsDisplayComponent = (function () {
     postsDisplayComponent.prototype.publishSelection = function () {
         this.postService.publishPosts(this.adminSelected);
     };
-    postsDisplayComponent.prototype.clearSubmissions = function (primaryKey) {
+    postsDisplayComponent.prototype.clearSubmissions = function () {
         if (this.currRoom != "") {
             this.adminSelected = []; // empty adminSelected array so that deleted posts are not published
-            this.postService.deletePosts(primaryKey);
+            this.postService.deletePosts(this.probSelect.getCurrKey());
         }
     };
     postsDisplayComponent.prototype.clearPublished = function () {
@@ -718,16 +720,20 @@ __decorate([
     __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["k" /* Input */])(),
     __metadata("design:type", Boolean)
 ], postsDisplayComponent.prototype, "admin", void 0);
+__decorate([
+    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["k" /* Input */])(),
+    __metadata("design:type", typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_2__probSelect_probSelect_component__["a" /* ProbSelectComponent */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__probSelect_probSelect_component__["a" /* ProbSelectComponent */]) === "function" && _a || Object)
+], postsDisplayComponent.prototype, "probSelect", void 0);
 postsDisplayComponent = __decorate([
     __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["q" /* Component */])({
         selector: 'posts-display',
         template: __webpack_require__("../../../../../src/app/postsDisplay/postsDisplay.component.html"),
         styles: [__webpack_require__("../../../../../src/app/postsDisplay/postsDisplay.component.css")],
     }),
-    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__PostsService_PostsService_service__["a" /* PostService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__PostsService_PostsService_service__["a" /* PostService */]) === "function" && _a || Object])
+    __metadata("design:paramtypes", [typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_1__PostsService_PostsService_service__["a" /* PostService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__PostsService_PostsService_service__["a" /* PostService */]) === "function" && _b || Object])
 ], postsDisplayComponent);
 
-var _a;
+var _a, _b;
 //# sourceMappingURL=postsDisplay.component.js.map
 
 /***/ }),
@@ -804,6 +810,10 @@ var ProbSelectComponent = (function () {
         this.postsDisplay.changeRoom(this.currProb);
         // request the posts for this room
         this.postService.requestPosts(this.currKey);
+    };
+    ProbSelectComponent.prototype.getCurrKey = function () {
+        this.currKey = this.keyVal[this.currProb];
+        return this.currKey;
     };
     ProbSelectComponent.prototype.createProblem = function (prob) {
         console.log("create new problem");

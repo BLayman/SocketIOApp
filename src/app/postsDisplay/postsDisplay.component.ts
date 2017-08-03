@@ -2,7 +2,7 @@ import { Component } from "@angular/core";
 import {Post} from '../postsService/post'; // post model
 import {PostService} from "../PostsService/PostsService.service";
 import {Input} from '@angular/core';
-
+import {ProbSelectComponent} from '../probSelect/probSelect.component'
 
 @Component({
   selector: 'posts-display',
@@ -12,6 +12,7 @@ import {Input} from '@angular/core';
 
 export class postsDisplayComponent {
   @Input() admin: boolean;
+  @Input() probSelect: ProbSelectComponent;
 
   posts: Post[] = []; // array of posts bound to our html by structural directive
   selectedPost: Post = {
@@ -150,10 +151,10 @@ export class postsDisplayComponent {
     this.postService.publishPosts(this.adminSelected);
   }
 
-  clearSubmissions(primaryKey) {
+  clearSubmissions() {
     if (this.currRoom != "") {
       this.adminSelected = []; // empty adminSelected array so that deleted posts are not published
-      this.postService.deletePosts(primaryKey);
+      this.postService.deletePosts(this.probSelect.getCurrKey());
     }
   }
 

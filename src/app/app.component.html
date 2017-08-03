@@ -2,4 +2,4 @@
 <h1 id="mainTitle">{{title}}</h1>
 <prob-select [postsDisplay]="PD" [admin]="admin" #PS></prob-select>
 <submit-post [admin]="admin" [postsDisplay] = "PD" [nickname]="nickname" [probSelect]="PS" [userPK]="userPK"></submit-post>
-<posts-display [admin]="admin" #PD ></posts-display>
+<posts-display [admin]="admin" #PD [probSelect] = "PS"></posts-display>
