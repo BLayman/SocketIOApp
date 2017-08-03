@@ -30,7 +30,7 @@ export class AppComponent {
   openDialog() {
     this.dialogRef = this.dialog.open(Dialog,{disableClose: true,});
     if (this.validationError) {
-      this.dialogRef.componentInstance.errorMsg = "Invalid Nickname or Student ID";
+      this.dialogRef.componentInstance.errorMsg = "Blank nickname or invalid ID.";
     }
     this.dialogRef.afterClosed().subscribe(result => {
       this.dialogRef = null;
