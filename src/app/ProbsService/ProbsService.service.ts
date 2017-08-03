@@ -30,8 +30,8 @@ export class ProbService{
     return listener;
   }
 
-  deleteProb(probPK){
-    this.socket.emit("delete room", probPK);
+  deleteProb(probObj){
+    this.socket.emit("delete room", probObj);
   }
 
 }

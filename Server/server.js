@@ -51,8 +51,8 @@ io.on('connection',function(socket){
   });
 
   // delete a room
-  socket.on('delete room', function (roomPK) {
-      roomIO.deleteRoom(roomPK);
+  socket.on('delete room', function (roomObj) {
+      roomIO.deleteRoom(roomObj);
   });
 
   /* post IO */

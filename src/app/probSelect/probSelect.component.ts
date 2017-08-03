@@ -86,14 +86,15 @@ export class ProbSelectComponent {
     if (this.currProb != this.default){
       this.currKey = this.keyVal[this.currProb];
       console.log("problem "+ this.currProb + " with key: " + this.currKey + " deleted");
-      this.probService.deleteProb(this.currKey);
+      this.probService.deleteProb({name: this.currProb, pk: this.currKey});
     }
   }
 
   listenForDeleted(){
     let deletedObserver = this.probService.listenForDeleted();
     deletedObserver.subscribe(
-      (deleted : Prob) => {
+      (deleted : any) => {
+        console.log("deleted problem " + deleted.name + " with pk " + deleted.pk);
         // delete property of keyVal object corresponding to that pk
         delete this.keyVal[deleted.name];
         // remove problem from dropdown

@@ -131,8 +131,8 @@ var ProbService = (function () {
         var listener = __WEBPACK_IMPORTED_MODULE_1_rxjs_Observable__["Observable"].fromEvent(this.socket, 'room deleted');
         return listener;
     };
-    ProbService.prototype.deleteProb = function (probPK) {
-        this.socket.emit("delete room", probPK);
+    ProbService.prototype.deleteProb = function (probObj) {
+        this.socket.emit("delete room", probObj);
     };
     return ProbService;
 }());
@@ -853,13 +853,14 @@ var ProbSelectComponent = (function () {
         if (this.currProb != this.default) {
             this.currKey = this.keyVal[this.currProb];
             console.log("problem " + this.currProb + " with key: " + this.currKey + " deleted");
-            this.probService.deleteProb(this.currKey);
+            this.probService.deleteProb({ name: this.currProb, pk: this.currKey });
         }
     };
     ProbSelectComponent.prototype.listenForDeleted = function () {
         var _this = this;
         var deletedObserver = this.probService.listenForDeleted();
         deletedObserver.subscribe(function (deleted) {
+            console.log("deleted problem " + deleted.name + " with pk " + deleted.pk);
             // delete property of keyVal object corresponding to that pk
             delete _this.keyVal[deleted.name];
             // remove problem from dropdown

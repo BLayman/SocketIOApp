@@ -36,6 +36,7 @@ module.exports = class {
   // called when a user selects a room
   joinRoom(roomPK, admin, publishedPosts){
     let thisInstance = this; // for referencing instance variables
+    console.log(this.socket.id + ' left room pk: ' + this.socket.currRoom);
     console.log(this.socket.id + ' joined room pk: ' + roomPK);
     // leave prevous room
     this.socket.leave(this.socket.currRoom);
@@ -95,27 +96,24 @@ module.exports = class {
         console.log('published retrieved: ');
         console.log(results);
       })
-      /* DELETE?
-      console.log(publishedPosts);
-      if(publishedPosts[roomPK]){
-        this.socket.emit('response published', publishedPosts[roomPK]);
-      }
-      */
     }
   }
 
-  deleteRoom(roomPK){
-    //TODO
+  deleteRoom(roomObj){
+    console.log("removing: ");
+    console.log(roomObj);
     // remove room from roomList
-    //let index = roomList.indexOf(/*****/);
-    //roomList.splice(index, 1);
+    let index = roomList.indexOf(roomObj);
+    roomList.splice(index, 1);
 
-    // delete posts contained in that room
+    // uncomment to delete posts in that room from the database
+    /*
     posts.deletePosts(roomPK)
     .then(() => {console.log('deleted posts in room with PK : ' + roomPK);})
     .catch((err) => {console.log(err);});
+    */
     // notify all clients
-    this.io.emit('room deleted', roomPK);
+    this.io.emit('room deleted', roomObj);
   }
 
   // get list of rooms
