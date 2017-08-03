@@ -7,7 +7,7 @@ module.exports = function () {
   // function for inserting users
   this.addRoom = function (roomName) {
     return new Promise(function (resolve, reject) {
-      connection.sync(/*{force:true}*/).then(function () {
+      connection.sync({force:true}).then(function () {
         // create new row using roomName argument
         Rooms.create({
           name : roomName

@@ -11,7 +11,7 @@ module.exports = function () {
   // function for inserting users
   this.addUser = function (userID) {
     return new Promise(function (resolve, reject) {
-      connection.sync(/*{force:true}*/).then(function () {
+      connection.sync({force:true}).then(function () {
         // create new row using userID argument
         Users.create({
           studentID : userID,

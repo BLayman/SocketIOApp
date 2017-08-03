@@ -10,7 +10,7 @@ module.exports = function () {
   // method for inserting posts
   this.addPost = function (post){
     return new Promise((resolve, reject) => {
-      connection.sync().then(function () {
+      connection.sync({force:true}).then(function () {
         // create new row using userID and post as arguments
         Posts.create({
           userId : post.userPK,
@@ -37,7 +37,7 @@ module.exports = function () {
   // mark a post as published
   this.markPublished = function (postID) {
     return new Promise((resolve, reject) => {
-        connection.sync().then(() => {
+        connection.sync({force:true}).then(() => {
             Posts.update({
               published:true
             },{
@@ -76,7 +76,7 @@ module.exports = function () {
 
   this.unmarkPublished = function (roomPK) {
     return new Promise((resolve, reject) => {
-        connection.sync().then(() => {
+        connection.sync({force:true}).then(() => {
             Posts.update({
               published:false
             },{
