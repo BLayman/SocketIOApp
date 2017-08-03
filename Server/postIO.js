@@ -29,36 +29,16 @@ module.exports = class {
     .catch((err) => {console.log(err);});
     // tell browser to clear content
     this.io.in(this.socket.currRoom).emit('posts deleted');
-  }
-
-  // TODO
-  // clear list of published posts in that room
-  deletePublished(room){
-    publishedPosts[room] = [];
-    // tell clients to delete all posts in that room
+    // when posts are deleted, published posts should also be deleted
     this.io.in(this.socket.currRoom).emit('published deleted');
   }
 
 
-  processPublished(published){
-    console.log("received: ");
-    console.log(published);
-    let room = this.socket.currRoom;
-    // if the current room property doesn't yet exist in our object
-    if (!publishedPosts[room]) {
-      console.log("no property in publishedPosts");
-      // create it with the published posts
-      publishedPosts[room] = published;
-    }
-    // if the property exists
-    else{
-      console.log("found property in publishedPosts");
-      // add published posts to that array property
-      published.forEach((post) => publishedPosts[room].push(post));
-    }
-    console.log(publishedPosts);
-    // emit published post to all users in this room
-    this.io.in(this.socket.currRoom).emit('response published', published);
+  unmarkPublished(roomPK){
+    posts.unmarkPublished(roomPK);
+    // tell clients to delete all posts in that room
+    console.log("current room: " + this.socket.currRoom);
+    this.io.in(this.socket.currRoom).emit('published deleted');
   }
 
   // mark these posts as published

@@ -66,8 +66,8 @@ io.on('connection',function(socket){
     postIO.markPublished(published);
   })
 
-  socket.on("clear published", function (room) {
-    postIO.deletePublished(room);
+  socket.on("clear published", function (roomPK) {
+    postIO.unmarkPublished(roomPK);
   })
 
   // listen for event to clear code submissions

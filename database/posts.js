@@ -45,8 +45,8 @@ module.exports = function () {
               returning: true
             })
             .then(record => {
-              console.log("record: " + record.dataValues);
-              resolve(record.datavalues);
+              console.log("record id: " + record.dataValues.id);
+              resolve(record.datavalues.id);
             })
             .catch((err) => {
               console.log(err);
@@ -74,17 +74,20 @@ module.exports = function () {
     })
   },
 
-  this.unmarkPublished = function (postID) {
+  this.unmarkPublished = function (roomPK) {
     return new Promise((resolve, reject) => {
         connection.sync().then(() => {
             Posts.update({
               published:false
             },{
-              where:{id: postID},
+              where:{
+                roomId: roomPK,
+                published: true
+              },
               returning: true
             })
             .then(result => {
-              console.log(result);
+              console.log("unmarked");
               resolve(result);
             })
             .catch((err) => {

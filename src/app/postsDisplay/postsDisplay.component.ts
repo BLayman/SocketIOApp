@@ -109,7 +109,9 @@ export class postsDisplayComponent {
         if(!this.admin){
           this.posts = [];
           // retain post that were submitted by this user
-          this.addPosts(this.storedByRoom[this.currRoom]);
+          if (this.storedByRoom[this.currRoom]){
+            this.addPosts(this.storedByRoom[this.currRoom]);
+          }
         }
       }, (error) => {
         console.log("error");
@@ -159,7 +161,7 @@ export class postsDisplayComponent {
   }
 
   clearPublished(){
-    this.postService.clearPublished(this.currRoom);
+    this.postService.clearPublished(this.probSelect.getCurrKey());
   }
   // display post in large text area
   viewPost(post) {

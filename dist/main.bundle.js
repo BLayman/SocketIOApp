@@ -646,7 +646,9 @@ var postsDisplayComponent = (function () {
             if (!_this.admin) {
                 _this.posts = [];
                 // retain post that were submitted by this user
-                _this.addPosts(_this.storedByRoom[_this.currRoom]);
+                if (_this.storedByRoom[_this.currRoom]) {
+                    _this.addPosts(_this.storedByRoom[_this.currRoom]);
+                }
             }
         }, function (error) {
             console.log("error");
@@ -692,7 +694,7 @@ var postsDisplayComponent = (function () {
         }
     };
     postsDisplayComponent.prototype.clearPublished = function () {
-        this.postService.clearPublished(this.currRoom);
+        this.postService.clearPublished(this.probSelect.getCurrKey());
     };
     // display post in large text area
     postsDisplayComponent.prototype.viewPost = function (post) {
