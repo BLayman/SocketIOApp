@@ -31,6 +31,3 @@ module.exports = function () {
   }
 
 }
-/* test module */
-let modExp = new module.exports();
-modExp.addUser(445);

@@ -10,7 +10,7 @@ if (process.env.DATABASE_URL) {
 // if running on local host
 else{
   // const connection = new Sequelize('postgres://testEditor:ezpass3@localhost:5432/test'); // test db
-  connection = new Sequelize('postgres://testEditor:ezpass3@localhost:5432/coshdev',{logging:true}); // dev db
+  connection = new Sequelize('postgres://testEditor:ezpass3@localhost:5432/coshdev',{logging:console.log}); // dev db
   console.log("connected to database");
 }
 
