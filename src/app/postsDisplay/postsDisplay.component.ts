@@ -151,6 +151,10 @@ export class postsDisplayComponent {
 
   publishSelection() {
     this.postService.publishPosts(this.adminSelected);
+    this.adminSelected.forEach(post => {
+        post.selected = false;
+    });
+    this.adminSelected = [];
   }
 
   clearSubmissions() {

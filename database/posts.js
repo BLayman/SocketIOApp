@@ -45,8 +45,7 @@ module.exports = function () {
               returning: true
             })
             .then(record => {
-              console.log("record id: " + record.dataValues.id);
-              resolve(record.datavalues.id);
+              resolve(postID);
             })
             .catch((err) => {
               console.log(err);

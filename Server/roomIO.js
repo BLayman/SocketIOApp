@@ -40,11 +40,6 @@ module.exports = class {
     console.log(this.socket.id + ' joined room pk: ' + roomPK);
     // leave prevous room
     this.socket.leave(this.socket.currRoom);
-    /* DELETE?
-    roomList.forEach(function (room){
-      thisInstance.socket.leave(room);
-    });
-    */
     //join new room
     this.socket.join(roomPK);
     this.socket.currRoom = roomPK;

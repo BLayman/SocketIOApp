@@ -686,6 +686,10 @@ var postsDisplayComponent = (function () {
     };
     postsDisplayComponent.prototype.publishSelection = function () {
         this.postService.publishPosts(this.adminSelected);
+        this.adminSelected.forEach(function (post) {
+            post.selected = false;
+        });
+        this.adminSelected = [];
     };
     postsDisplayComponent.prototype.clearSubmissions = function () {
         if (this.currRoom != "") {
