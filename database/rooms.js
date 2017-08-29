@@ -7,6 +7,7 @@ module.exports = function () {
   // function for inserting users
   this.addRoom = function (roomName) {
     return new Promise(function (resolve, reject) {
+      // uncomment "force:true" option to force changes on database structure
       connection.sync(/*{force:true}*/).then(function () {
         // create new row using roomName argument
         Rooms.create({
@@ -15,7 +16,7 @@ module.exports = function () {
         .then(function (insertedRoom) {
           console.log("room created: " + roomName);
           console.log("primary key: " + insertedRoom.dataValues.id);
-          // send primary key with promise resolution
+          // resolve promise with id of new entry in database
           resolve(insertedRoom.dataValues.id);
         })
         .catch(function (err) {

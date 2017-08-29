@@ -10,8 +10,9 @@ module.exports = function () {
   // method for inserting posts
   this.addPost = function (post){
     return new Promise((resolve, reject) => {
+      // uncomment force:true option to force changes on database structure
       connection.sync(/*{force:true}*/).then(function () {
-        // create new row using userID and post as arguments
+        // create new row using post object information
         Posts.create({
           userId : post.userPK,
           nickname : post.nickname,
@@ -19,8 +20,10 @@ module.exports = function () {
           roomId: post.roomPK,
           published: false
         })
+        // once inserted resolve promise with new refinedPost object
         .then(function (inserted) {
           let refinedPost = post;
+          // get id from new row in database
           refinedPost.id = inserted.dataValues.id;
           console.log("Inserted by user: " + inserted.dataValues.userId);
           console.log("post refined by database: ");
@@ -34,9 +37,10 @@ module.exports = function () {
       });
     });
   },
-  // mark a post as published
+  // mark a post as published by setting it's published column to true
   this.markPublished = function (postID) {
     return new Promise((resolve, reject) => {
+      // uncomment force:true option to force changes on database structure
         connection.sync(/*{force:true}*/).then(() => {
             Posts.update({
               published:true
@@ -54,7 +58,7 @@ module.exports = function () {
         })
     })
   },
-
+  // retrieve all posts that have been published in a given room
   this.retrievePublished = function (postsRoomPK) {
     return new Promise((resolve, reject) => {
         Posts.findAll({
@@ -72,9 +76,10 @@ module.exports = function () {
         })
     })
   },
-
+  // set published to false for all posts in a given room
   this.unmarkPublished = function (roomPK) {
     return new Promise((resolve, reject) => {
+      // uncomment force:true option to force changes on database structure
         connection.sync(/*{force:true}*/).then(() => {
             Posts.update({
               published:false
@@ -97,7 +102,7 @@ module.exports = function () {
     })
   },
 
-  // method fo retrieving array of posts
+  // method fo retrieving array of posts for a given room
   this.retrieve = function (postsRoom) {
     return new Promise((resolve, reject) => {
       Posts.findAll({
@@ -114,7 +119,7 @@ module.exports = function () {
     });
   },
 
-  // for deleting all posts
+  // for deleting all posts in a given room
   this.deletePosts = function (postsRoom) {
     return new Promise(function (resolve, reject) {
       Posts.destroy({
@@ -131,11 +136,4 @@ module.exports = function () {
       });
     });
   }
-
 }
-
-/* testing
-modExp = new module.exports();
-modExp.addPost(222, "new post");
-modExp.retrieve();
-*/

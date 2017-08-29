@@ -4,6 +4,7 @@ import {PostService} from '../PostsService/PostsService.service';
 import {postsDisplayComponent} from '../postsDisplay/postsDisplay.component';
 import {Prob} from '../ProbsService/prob';
 
+// component for selecting, adding and removing a problem (room) from the dropdown.
 @Component({
   selector: 'prob-select',
   templateUrl: './probSelect.component.html',
@@ -11,25 +12,27 @@ import {Prob} from '../ProbsService/prob';
 })
 
 export class ProbSelectComponent {
-  @Input() admin: boolean;
-  @Input() postsDisplay: postsDisplayComponent;
-  default :string = " -- select an option -- ";
-  keyVal : {} = {};
-  probs : string[] = [this.default];
-  currProb : string;
-  currKey: number;
-  justCreated : boolean = false;
+  @Input() admin: boolean; // whether or not user is an admin
+  @Input() postsDisplay: postsDisplayComponent; // reference to postsDisplay component
+  default :string = " -- select an option -- "; // default dropdown selection
+  keyVal : {} = {}; // library for accessing rooms using database ids
+  probs : string[] = [this.default]; // list of problems bound to html
+  currProb : string; // currently selected problem, also bound to html
+  currKey: number; // id of currently selected problem
+  justCreated : boolean = false; // for switching to newly made problem
 
   constructor(private probService: ProbService, private postService: PostService){}
 
   ngOnInit(){
+    // set current problem and add it to the keyVal dictionary
     this.currProb = this.default;
     this.keyVal[this.currProb] = -1;
-    console.log("default current problem: " + this.currProb);
+    // listen for new and deleted problems
     this.listenForProbs();
     this.listenForDeleted();
   }
 
+  // called when a problem is selected from the dropdown
   selectProblem(){
     // get key associated with problem name
     this.currKey = this.keyVal[this.currProb];
@@ -40,13 +43,13 @@ export class ProbSelectComponent {
     // request the posts for this room
     this.postService.requestPosts(this.currKey);
   }
-
+  // used by other components to access id's of problems
   getCurrKey(){
     this.currKey = this.keyVal[this.currProb];
     return this.currKey;
   }
 
-
+  // create new problem
   createProblem(prob){
     console.log("create new problem");
     let name = prompt("Enter name for new room:");
@@ -55,7 +58,7 @@ export class ProbSelectComponent {
       this.justCreated = true;
     }
   }
-
+  // listen for any newly created problems
   listenForProbs(){
     let probObserver = this.probService.listenForProbs();
     probObserver.subscribe(
@@ -67,6 +70,7 @@ export class ProbSelectComponent {
             this.probs.push(prob.name);
             console.log(this.probs);
         });
+        // if this problem was just made by the user, select it
         if (this.justCreated) {
           retrievedProbs.forEach(prob => {
             this.currProb = prob.name;
@@ -81,7 +85,7 @@ export class ProbSelectComponent {
       }
   );
   }
-
+  // delete a problem
   deleteProblem(){
     if (this.currProb != this.default){
       this.currKey = this.keyVal[this.currProb];
@@ -89,7 +93,8 @@ export class ProbSelectComponent {
       this.probService.deleteProb({name: this.currProb, pk: this.currKey});
     }
   }
-
+  
+  // remove deleted problems
   listenForDeleted(){
     let deletedObserver = this.probService.listenForDeleted();
     deletedObserver.subscribe(

@@ -9,7 +9,7 @@ if (process.env.DATABASE_URL) {
 }
 // if running on local host
 else{
-  // const connection = new Sequelize('postgres://testEditor:ezpass3@localhost:5432/test'); // test db
+  // local database connection
   connection = new Sequelize('postgres://testEditor:ezpass3@localhost:5432/coshdev',{logging:console.log}); // dev db
   console.log("connected to database");
 }
@@ -18,7 +18,7 @@ else{
 const tables = {
   // database connection
   sequelize: connection,
-  // users model
+  // users table
   users: connection.define('users', {
     id: {
       type: Sequelize.INTEGER,
@@ -62,7 +62,8 @@ const tables = {
     }
   })
 }
-
+// establish foreign keys in posts table
 tables.posts.belongsTo(tables.users);
 tables.posts.belongsTo(tables.rooms);
+// export dabase model
 module.exports = tables;

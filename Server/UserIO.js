@@ -13,7 +13,7 @@ if (process.env.STUDENT_IDS && process.env.ADMIN_IDS) {
 }
 // otherwise use test lists
 else{
-  studentList = new Set(["3","4","5","6","7","8","9"]);
+  studentList = new Set(["4","5","6","7","8","9"]);
   adminList = new Set(["1","2","3"]);
 }
 
@@ -39,9 +39,9 @@ module.exports = class {
       // add user ID to users table in database
       users.addUser(userID)
       .then((userPk) => {
+        // tell browser user user is valid and send user session id
         this.socket.emit("validation", {valid: true, pk: userPk});
       })
-      // tell browser user is valid
     }
     else{
       // tell browser user is invalid

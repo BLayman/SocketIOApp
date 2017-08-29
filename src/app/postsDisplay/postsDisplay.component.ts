@@ -4,6 +4,7 @@ import {PostService} from "../PostsService/PostsService.service";
 import {Input} from '@angular/core';
 import {ProbSelectComponent} from '../probSelect/probSelect.component'
 
+// This component represents functionality related to what posts are displayed
 @Component({
   selector: 'posts-display',
   templateUrl: './postsDisplay.component.html',
@@ -15,6 +16,7 @@ export class postsDisplayComponent {
   @Input() probSelect: ProbSelectComponent;
 
   posts: Post[] = []; // array of posts bound to our html by structural directive
+  // the user's currently selected post
   selectedPost: Post = {
     body: "Code displayed here.",
     selected: true,
@@ -24,15 +26,20 @@ export class postsDisplayComponent {
     userPK: -1,
     id: -1
   }
+  // all posts selected by admin to be published
   adminSelected: Post[] = [];
+  // name of room user is in
   currRoom: string = "";
-  storedByRoom: {} = {}; // client storage of users own posts
+  // client storage of users own posts
+  storedByRoom: {} = {};
 
   constructor(private postService: PostService) { // create a PostService variable
+    // start listening for published and deleted posts
     this.listenForDeletedPosts();
     this.listenForDeletedPublished();
   }
 
+  // when submitting a post, display it on the user's post list
   postToSelf(post){
     // if the room exists in our object
     if(this.storedByRoom[this.currRoom]){
@@ -68,7 +75,7 @@ export class postsDisplayComponent {
     }
 
   }
-
+  // listen for all new posts if admin
   listenForPosts() {
     let postObserver = this.postService.listenForPosts();
     // subscribe to observable that listens for posts
@@ -83,13 +90,14 @@ export class postsDisplayComponent {
       }
     );
   }
-
+  // listen for posts published by admin
   listenForPublished() {
     let observer = this.postService.listenForPublished();
     observer.subscribe(
       retrievedPublished => {
         console.log("received: ");
         console.log(retrievedPublished);
+        // add posts to array to be displayed
         this.addPosts(retrievedPublished);
       }, (error) => {
         console.error(error);
@@ -98,7 +106,7 @@ export class postsDisplayComponent {
       }
     )
   }
-
+  // remove published posts from the display if requested by server
   listenForDeletedPublished(){
     let observer = this.postService.listenForDeletedPublished();
     // subscribe to observable that listens for posts
@@ -107,8 +115,9 @@ export class postsDisplayComponent {
       () => {
         console.log("deleted published");
         if(!this.admin){
+          // empty posts array
           this.posts = [];
-          // retain post that were submitted by this user
+          // retain posts that were submitted by this user
           if (this.storedByRoom[this.currRoom]){
             this.addPosts(this.storedByRoom[this.currRoom]);
           }
@@ -121,15 +130,17 @@ export class postsDisplayComponent {
       }
     );
   }
-
+  // remove all posts from the display if requested by server
   listenForDeletedPosts() {
     let deletedObserver = this.postService.listenForDeletedPosts();
     // subscribe to observable that listens for posts
     deletedObserver.subscribe(
       // when posts are retrieved, add the to posts property
       () => {
+        // this only effects admins who see all the posts
         if (this.admin) {
           console.log("deleted posts");
+          // empty posts array
           this.posts = [];
         }
       }, (error) => {
@@ -140,7 +151,7 @@ export class postsDisplayComponent {
       }
     );
   }
-  // for converting array of strings to posts
+  // add new posts to posts array to be displayed
   addPosts(newPosts) {
     newPosts.forEach(post => {
       post.viewing = false;
@@ -148,22 +159,23 @@ export class postsDisplayComponent {
       this.posts.push(post);
     });
   }
-
+  // publish posts in adminSelected
   publishSelection() {
     this.postService.publishPosts(this.adminSelected);
     this.adminSelected.forEach(post => {
         post.selected = false;
     });
+    // clear published posts after
     this.adminSelected = [];
   }
-
+  // delete all posts in this room (problem)
   clearSubmissions() {
     if (this.currRoom != "") {
       this.adminSelected = []; // empty adminSelected array so that deleted posts are not published
       this.postService.deletePosts(this.probSelect.getCurrKey());
     }
   }
-
+  // un-publish all posts published in this room
   clearPublished(){
     this.postService.clearPublished(this.probSelect.getCurrKey());
   }

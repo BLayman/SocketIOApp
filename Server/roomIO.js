@@ -4,7 +4,7 @@ let posts = new postsCon();
 // rooms table connection
 const roomsCon = require('../database/rooms')
 let rooms = new roomsCon();
-// default room list REPLACE
+// array for storing list of rooms active in current session
 let roomList = [];
 
 // roomIO class
@@ -48,6 +48,7 @@ module.exports = class {
       posts.retrieve(roomPK)
       .then(function (records) {
         let results = []; // array of posts to be sent in callback
+        // create a new post for each record retrieved
         records.forEach(function (record){
           let post = {
             selected: false,
@@ -69,12 +70,12 @@ module.exports = class {
         console.log(err);
       })
     }
-    // not admin
+    // not admin: send back posts that have been published in that room
     else{
-      // send back posts that have been published in that room
+      // retrieve published posts from database
       posts.retrievePublished(roomPK)
       .then(records => {
-        let results = [];
+        let results = []; // stores retrieved posts
         records.forEach((record) => {
           let post = {
             selected: false,
@@ -87,13 +88,14 @@ module.exports = class {
           }
           results.push(post);
         });
+        // send published posts back to user that joined the room
         thisInstance.socket.emit('response published', results);
         console.log('published retrieved: ');
         console.log(results);
       })
     }
   }
-
+  // delete room (from browser display), but not database content for that room
   deleteRoom(roomObj){
     console.log("removing: ");
     console.log(roomObj);

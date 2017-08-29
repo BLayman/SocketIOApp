@@ -2,21 +2,12 @@
 const postsCon = require('../database/posts')
 const posts = new postsCon();
 
-// DELETE ?
-let publishedPosts = {}; // posts that an admin has published, with keys as rooms and values as arrays of posts
-
 //postIO class
 module.exports = class {
   // set up socket
   constructor(socket, io){
     this.socket = socket;
     this.io = io;
-  }
-  // DELETE ?
-  // get posts published by admin
-  getPublishedPosts(){
-    console.log("getPublishedPosts: " + publishedPosts);
-    return publishedPosts;
   }
 
   // delete posts from current room
@@ -33,22 +24,24 @@ module.exports = class {
     this.io.in(this.socket.currRoom).emit('published deleted');
   }
 
-
+  // un-publish posts in a given room
   unmarkPublished(roomPK){
+    // set published to false in database entries
     posts.unmarkPublished(roomPK);
-    // tell clients to delete all posts in that room
     console.log("current room: " + this.socket.currRoom);
+    // tell clients to delete all posts in that room
     this.io.in(this.socket.currRoom).emit('published deleted');
   }
 
-  // mark these posts as published
+  // mark this array of posts as published
   markPublished(published){
     console.log("received: ");
     console.log(published);
-    // mark as published in our database
+    // mark as published in our database for each post
     published.forEach((post) => {
       posts.markPublished(post.id);
     });
+    // publish posts to student users
     this.io.in(this.socket.currRoom).emit('response published', published);
   }
 
@@ -58,11 +51,11 @@ module.exports = class {
     if(this.socket.currRoom == ""){
       this.socket.emit('no room');
     }
-    // otherwise add postContent to posts, and send to all users in room
+    // otherwise add postContent to posts table, and send to all users in room
     else{
       console.log(post.body + " sent in room " + this.socket.currRoom);
-      // add postContent to posts table in database
       console.log("this.socket.currentUserID: " + this.socket.currentUserID);
+      // add postContent to posts table in database
       posts.addPost(post)
       .then((inserted) => {
         console.log('post added: ')

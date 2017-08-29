@@ -4,19 +4,21 @@ import {postsDisplayComponent} from '../postsDisplay/postsDisplay.component';
 import {Post} from '../PostsService/post';
 import {ProbSelectComponent} from '../probSelect/probSelect.component';
 
+// component for submitting new posts
 @Component({
   selector: 'submit-post',
   templateUrl: './submitPost.component.html',
   styleUrls: ['./submitPost.component.css']
 })
+
 export class SubmitPostComponent {
   @Input() admin: boolean;
-  @Input() nickname: string;
+  @Input() nickname: string; // user nickname
   @Input() postsDisplay: postsDisplayComponent;
   @Input() probSelect: ProbSelectComponent;
-  @Input() userPK : number;
-  newPost : Post;
-  textBody : string = "";
+  @Input() userPK : number; // database id for user
+  newPost : Post; // new post object
+  textBody : string = ""; // post text bound to html
 
   constructor(private postService: PostService){}
 
