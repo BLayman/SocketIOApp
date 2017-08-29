@@ -34,7 +34,7 @@ module.exports = class {
   }
 
   // called when a user selects a room
-  joinRoom(roomPK, admin, publishedPosts){
+  joinRoom(roomPK, admin){
     let thisInstance = this; // for referencing instance variables
     console.log(this.socket.id + ' left room pk: ' + this.socket.currRoom);
     console.log(this.socket.id + ' joined room pk: ' + roomPK);

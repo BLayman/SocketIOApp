@@ -42,7 +42,7 @@ io.on('connection',function(socket){
   // join selected room
   socket.on('join room', function (roomPK) {
     console.log("admin: " + userIO.getAdmin());
-    roomIO.joinRoom(roomPK, userIO.getAdmin(), postIO.getPublishedPosts());
+    roomIO.joinRoom(roomPK, userIO.getAdmin());
   });
 
   // creation of new room
