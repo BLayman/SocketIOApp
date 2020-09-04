@@ -19,7 +19,7 @@
     "http": "0.0.0",
     "path": "^0.12.7",
     "pg": "^6.2.4",
-    "sequelize": "^3.30.4",
+    "sequelize": "^6.3.5",
     "socket.io": "^2.0.1",
     "@angular/cli": "1.1.1",
     "@angular/compiler-cli": "^4.0.0",
